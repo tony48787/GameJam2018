@@ -1,15 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HeroController : MonoBehaviour {
 
+	public float hp = 100f;
+	public Text hpText;
+	public float maxChargeBarValue = 1000f;
+	public Text chargeText;
+	private float currentChargeValue = 0f;
+	private float chargeBarIncreaseRate = 5f;
+	private float chargeBarDecreaseRate = 10f;
+	private bool canChargeAttack = false;
+	private bool holdingCharge = false;
+	public float chargeCoolDownDuration = 3f;
+	private float chargeCoolDownCountdown = 0f;
 	public float walkSpeed;
 	public Collider2D attackCollider;
 	public Rigidbody2D bulletType;
 	public Transform firePosition;
 	private Rigidbody2D rb2d;
 	private Animator animator;
+	private SpriteRenderer spriteRenderer;
+	private enum AttackType {
+		Shoot, Slice
+	};
+	private AttackType currentAttackType = AttackType.Shoot;
 	private bool attacking = false;
 	private bool holdingAttack = false;
 	private float attackAnimCountdown = 0f;
@@ -17,18 +34,34 @@ public class HeroController : MonoBehaviour {
 	private bool holdingShoot = false;
 	private float shootCoolDownCountdown = 0f;
 	public float shootCoolDownDuration = 0.2f;
+	private bool isInvincible = false;
+	public float invincibleDuration = 2f;
+	private float invincibleCountdown = 0f;
+	private bool isTransparent = false;
+	private float spriteBlinkDuration = 0.2f;
+	private float spriteBlinkCountdown = 0f;
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		attackCollider.enabled = false;
+		UpdateHpText();
+		UpdateChargeText();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		RotatePlayerToMouse();
+		if (Input.GetKeyDown(KeyCode.E)) {
+			SwitchAttackType();
+		}
 		HandleShoot();
 		HandleAttack();
+		HandleChargeSkill();
+		HandleInvinciblePeriod();
+		UpdateHpText();
+		UpdateChargeText();
 	}
 
 	void FixedUpdate() {
@@ -48,16 +81,34 @@ public class HeroController : MonoBehaviour {
 		transform.up = direction;
 	}
 
+	void SwitchAttackType() {
+		switch (currentAttackType) {
+			case AttackType.Shoot:
+				currentAttackType = AttackType.Slice;
+				Debug.Log("Change attack type from shoot to slice");
+				break;
+			case AttackType.Slice:
+				currentAttackType = AttackType.Shoot;
+				Debug.Log("Change attack type from slice to shoot");
+				break;
+			default:
+				currentAttackType = AttackType.Shoot;
+				Debug.Log("Change attack type from unknown to slice");
+				break;
+		}
+		holdingAttack = false;
+		holdingShoot = false;
+	}
+
 	void HandleShoot() {
-		if (Input.GetKeyDown("mouse 0")) {
+		if (Input.GetKeyDown("mouse 0") && currentAttackType == AttackType.Shoot) {
 			holdingShoot = true;
-			animator.SetBool("IsShooting", true);
 		}
 		if (Input.GetKeyUp("mouse 0")) {
 			holdingShoot = false;
-			animator.SetBool("IsShooting", false);
 		}
-		if (holdingShoot && !holdingAttack) {
+		if (holdingShoot && !holdingCharge) {
+			animator.SetBool("IsShooting", true);
 			if (shootCoolDownCountdown > 0) {
 				shootCoolDownCountdown -= Time.deltaTime;
 			}
@@ -66,6 +117,9 @@ public class HeroController : MonoBehaviour {
 				FireBullet();
 			}
 		}
+		else {
+			animator.SetBool("IsShooting", false);
+		}
 	}
 
 	void FireBullet() {
@@ -73,17 +127,17 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void HandleAttack() {
-		if (Input.GetKeyDown("mouse 1")) {
+		if (Input.GetKeyDown("mouse 0") && currentAttackType == AttackType.Slice) {
 			// pressed attack key
 			holdingAttack = true;
 		}
-		if (Input.GetKeyUp("mouse 1")) {
+		if (Input.GetKeyUp("mouse 0")) {
 			// released attack key
 			holdingAttack = false;
 		}
 		if (!attacking) {
 			// not playing attack animation, set trigger box for attack
-			if (holdingAttack && !holdingShoot) {
+			if (holdingAttack && !holdingCharge) {
 				animator.SetBool("IsFighting", true);
 				attackCollider.enabled = true;
 				attacking = true;
@@ -105,5 +159,110 @@ public class HeroController : MonoBehaviour {
 			}
 		}
 		
+	}
+
+	void HandleChargeSkill() {
+		if (Input.GetKeyDown("mouse 1")) {
+			holdingCharge = true;
+		}
+		if (Input.GetKeyUp("mouse 1")) {
+			holdingCharge = false;
+		}
+
+		// cool down time after charge attack
+		if (chargeCoolDownCountdown > 0) {
+			chargeCoolDownCountdown -= Time.deltaTime;
+		}
+		else {
+			chargeCoolDownCountdown = 0;
+			if (holdingCharge) {
+				if (currentChargeValue < maxChargeBarValue) {
+					currentChargeValue += chargeBarIncreaseRate;
+				}
+				else {
+					currentChargeValue = maxChargeBarValue;
+				}
+			}
+			else {
+				if (currentChargeValue > 0) {
+					currentChargeValue -= chargeBarDecreaseRate;
+				}
+				else {
+					currentChargeValue = 0;
+				}
+			}
+		}
+		canChargeAttack = (currentChargeValue >= maxChargeBarValue);
+
+		// handle charge attack skill
+		if (Input.GetKey("mouse 0") && canChargeAttack) {
+			if (currentAttackType == AttackType.Shoot) {
+				Debug.Log("Do Charge Shoot!");
+				// TODO: handle charge shoot
+			}
+			else if (currentAttackType == AttackType.Slice) {
+				Debug.Log("Do Charge Slice!");
+				// TODO: handle charge slice
+			}
+			currentChargeValue = 0;
+			canChargeAttack = false;
+			chargeCoolDownCountdown = chargeCoolDownDuration;
+		}
+	}
+
+	void UpdateHpText() {
+		hpText.text = "HP: " + hp.ToString();
+	}
+
+	void UpdateChargeText() {
+		chargeText.text = currentChargeValue.ToString() + "/" + maxChargeBarValue.ToString();
+	}
+
+	void OnDamaged(object[] args) {
+		Debug.Assert(args.Length == 2);
+		float damage = (float)args[0];
+		Vector2 force = (Vector2)args[1];
+		if (!isInvincible) {
+			// take damage
+			hp -= damage;
+			isInvincible = true;
+			isTransparent = true;
+			invincibleCountdown = invincibleDuration;
+			spriteBlinkCountdown = spriteBlinkDuration;
+
+			// repel from enemy
+			rb2d.velocity = new Vector2(0f, 0f);
+			rb2d.AddForce(force, ForceMode2D.Impulse);
+		}
+	}
+	
+	void HandleInvinciblePeriod() {
+		if (isInvincible) {
+			if (invincibleCountdown > 0) {
+				invincibleCountdown -= Time.deltaTime;
+				if (spriteBlinkCountdown > 0) {
+					spriteBlinkCountdown -= Time.deltaTime;
+					Color tmp = spriteRenderer.color;
+					if (isTransparent) {
+						tmp.a = 0.3f;
+					}
+					else {
+						tmp.a = 1f;
+					}
+					spriteRenderer.color = tmp;
+				}
+				else {
+					spriteBlinkCountdown = spriteBlinkDuration;
+					isTransparent = !isTransparent;
+				}
+			}
+			else {
+				invincibleCountdown = invincibleDuration;
+				isInvincible = false;
+				Color tmp = spriteRenderer.color;
+				tmp.a = 1f;
+				spriteRenderer.color = tmp;
+			}
+		}
 	}
 }
