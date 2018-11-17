@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 114761569543591122}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,6 +83,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 1
   Target: {fileID: 0}
+  coinDrop: 10
+  health: 100
 --- !u!212 &212363606378068848
 SpriteRenderer:
   m_ObjectHideFlags: 1
