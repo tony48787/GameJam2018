@@ -20,15 +20,14 @@ public class AttackCollider : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		Debug.Log("Trigger eneter");
 		if (!other.isTrigger && other.CompareTag("Enemy")) {
-			other.SendMessageUpwards("OnDamaged", damage, SendMessageOptions.DontRequireReceiver);
-			Debug.Log("Damage target");
-
-			// repel enemy from this collider
+			// add damage and repel enemy from this collider
 			Rigidbody2D otherRb2d = other.GetComponent<Rigidbody2D>();
 			Vector2 direction = otherRb2d.position - new Vector2 (transform.position.x, transform.position.y);
 			direction.Normalize();
-			otherRb2d.velocity = new Vector2(0f, 0f);
-			otherRb2d.AddForce(direction * repelForce, ForceMode2D.Impulse);
+			DamageMessage msg = new DamageMessage(damage, direction * repelForce);
+			otherRb2d.velocity = new Vector2(0, 0);
+			other.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
+			Debug.Log("Damage target");
 		}
 	}
 }

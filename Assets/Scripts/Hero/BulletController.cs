@@ -26,8 +26,9 @@ public class BulletController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.collider.CompareTag("Enemy")) {
 			Debug.Log("Bullet collide with Enemy");
-			other.collider.SendMessageUpwards("OnDamaged", damage, SendMessageOptions.DontRequireReceiver);
+			DamageMessage msg = new DamageMessage(damage);
+			other.collider.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
 		}
-		Destroy(this.gameObject);
+		Destroy(gameObject);
 	}
 }

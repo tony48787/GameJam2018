@@ -18,15 +18,14 @@ public class HeroController : MonoBehaviour {
 	private float chargeCoolDownCountdown = 0f;
 	public float walkSpeed;
 	public Collider2D attackCollider;
-	public Rigidbody2D bulletType;
+	public GameObject bulletType;
 	public Transform firePosition;
+	public GameObject swordWindType;
+	public GameObject explosiveBulletType;
 	private Rigidbody2D rb2d;
 	private Animator animator;
 	private SpriteRenderer spriteRenderer;
-	private enum AttackType {
-		Shoot, Slice
-	};
-	private AttackType currentAttackType = AttackType.Shoot;
+	private PlayerAttackType currentAttackType = PlayerAttackType.Shoot;
 	private bool attacking = false;
 	private bool holdingAttack = false;
 	private float attackAnimCountdown = 0f;
@@ -40,6 +39,7 @@ public class HeroController : MonoBehaviour {
 	private bool isTransparent = false;
 	private float spriteBlinkDuration = 0.2f;
 	private float spriteBlinkCountdown = 0f;
+
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
@@ -83,16 +83,16 @@ public class HeroController : MonoBehaviour {
 
 	void SwitchAttackType() {
 		switch (currentAttackType) {
-			case AttackType.Shoot:
-				currentAttackType = AttackType.Slice;
+			case PlayerAttackType.Shoot:
+				currentAttackType = PlayerAttackType.Slice;
 				Debug.Log("Change attack type from shoot to slice");
 				break;
-			case AttackType.Slice:
-				currentAttackType = AttackType.Shoot;
+			case PlayerAttackType.Slice:
+				currentAttackType = PlayerAttackType.Shoot;
 				Debug.Log("Change attack type from slice to shoot");
 				break;
 			default:
-				currentAttackType = AttackType.Shoot;
+				currentAttackType = PlayerAttackType.Shoot;
 				Debug.Log("Change attack type from unknown to slice");
 				break;
 		}
@@ -101,7 +101,7 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void HandleShoot() {
-		if (Input.GetKeyDown("mouse 0") && currentAttackType == AttackType.Shoot) {
+		if (Input.GetKeyDown("mouse 0") && currentAttackType == PlayerAttackType.Shoot) {
 			holdingShoot = true;
 		}
 		if (Input.GetKeyUp("mouse 0")) {
@@ -123,11 +123,11 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void FireBullet() {
-		Rigidbody2D bullet = Instantiate(bulletType, firePosition.position, firePosition.rotation);
+		GameObject bullet = Instantiate(bulletType, firePosition.position, firePosition.rotation);
 	}
 
 	void HandleAttack() {
-		if (Input.GetKeyDown("mouse 0") && currentAttackType == AttackType.Slice) {
+		if (Input.GetKeyDown("mouse 0") && currentAttackType == PlayerAttackType.Slice) {
 			// pressed attack key
 			holdingAttack = true;
 		}
@@ -196,13 +196,16 @@ public class HeroController : MonoBehaviour {
 
 		// handle charge attack skill
 		if (Input.GetKey("mouse 0") && canChargeAttack) {
-			if (currentAttackType == AttackType.Shoot) {
+			if (currentAttackType == PlayerAttackType.Shoot) {
 				Debug.Log("Do Charge Shoot!");
 				// TODO: handle charge shoot
+				GameObject explosiveBullet = Instantiate(explosiveBulletType, firePosition.position, firePosition.rotation);
 			}
-			else if (currentAttackType == AttackType.Slice) {
+			else if (currentAttackType == PlayerAttackType.Slice) {
 				Debug.Log("Do Charge Slice!");
 				// TODO: handle charge slice
+				// spawn sword wind
+				GameObject swordWind = Instantiate(swordWindType, transform.position, transform.rotation);
 			}
 			currentChargeValue = 0;
 			canChargeAttack = false;
@@ -218,13 +221,12 @@ public class HeroController : MonoBehaviour {
 		chargeText.text = currentChargeValue.ToString() + "/" + maxChargeBarValue.ToString();
 	}
 
-	void OnDamaged(object[] args) {
-		Debug.Assert(args.Length == 2);
-		float damage = (float)args[0];
-		Vector2 force = (Vector2)args[1];
+	void OnDamaged(DamageMessage msg) {
+		float receivedDamage = msg.damage;
+		Vector2 repelForce = msg.repelForce;
 		if (!isInvincible) {
 			// take damage
-			hp -= damage;
+			hp -= receivedDamage;
 			isInvincible = true;
 			isTransparent = true;
 			invincibleCountdown = invincibleDuration;
@@ -232,7 +234,7 @@ public class HeroController : MonoBehaviour {
 
 			// repel from enemy
 			rb2d.velocity = new Vector2(0f, 0f);
-			rb2d.AddForce(force, ForceMode2D.Impulse);
+			rb2d.AddForce(repelForce, ForceMode2D.Impulse);
 		}
 	}
 	

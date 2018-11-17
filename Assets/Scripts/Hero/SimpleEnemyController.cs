@@ -9,8 +9,10 @@ public class SimpleEnemyController : MonoBehaviour {
 	public float hp = 100f;
 	public float damage = 10f;
 	public float repelForce = 70f;
+	private Rigidbody2D rb2d;
 	// Use this for initialization
 	void Start () {
+		rb2d = GetComponent<Rigidbody2D>();
 		UpdateHpText();
 	}
 	
@@ -23,22 +25,23 @@ public class SimpleEnemyController : MonoBehaviour {
 		hpText.text = "Enemy HP: " + hp.ToString();
 	}
 
-	void OnDamaged(float damage) {
-		hp -= damage;
+	void OnDamaged(DamageMessage msg) {
+		float receivedDamage = msg.damage;
+		Vector2 repelForce = msg.repelForce;
+		hp -= receivedDamage;
+		rb2d.AddForce(repelForce, ForceMode2D.Impulse);
 		UpdateHpText();
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.collider.CompareTag("Player")) {
 			Debug.Log("Enemy attacks player");
-			object[] args = new object[2];
-			args[0] = damage;
 			// repel player from this collider
 			Rigidbody2D otherRb2d = other.collider.GetComponent<Rigidbody2D>();
 			Vector2 direction = otherRb2d.position - new Vector2 (transform.position.x, transform.position.y);
 			direction.Normalize();
-			args[1] = direction * repelForce;
-			other.collider.SendMessageUpwards("OnDamaged", args, SendMessageOptions.DontRequireReceiver);
+			DamageMessage msg = new DamageMessage(damage, direction * repelForce);
+			other.collider.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 }
