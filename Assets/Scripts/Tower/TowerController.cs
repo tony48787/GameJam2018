@@ -9,15 +9,18 @@ public class TowerController : MonoBehaviour {
 
     private float lastShootTime;
 
-	// Use this for initialization
-	void Start () {
+    private GameObject enemy;
+
+    private float damage = 50.0f;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//if in range
-            //if no cooldown then shoot
+        enemy = GameObject.FindGameObjectWithTag("Enemy");
         if (EnemyInRange() && !overheat) {
             ShootEnemy();
         } else
@@ -30,11 +33,10 @@ public class TowerController : MonoBehaviour {
 
     bool EnemyInRange()
     {
-        GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
         if (enemy)
         {
             float dist = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
-            return dist < GameManager.instance.horzExtent / 10;
+            return dist < GameManager.instance.horzExtent / 2;
         } else
         {
             return false;
@@ -44,16 +46,24 @@ public class TowerController : MonoBehaviour {
 
     void ShootEnemy()
     {
-        overheat = false;
+        overheat = true;
         lastShootTime = Time.time;
-        Transform transform = GetComponentInChildren<Transform>();
-        GameObject gm = Instantiate(TowerManager.instance.bullet01, transform.position, transform.rotation);
 
+        Transform transform = GetComponent<Transform>();
+        Vector3 diff = enemy.transform.position - transform.position;
+        diff.Normalize();
+
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        GetComponent<Transform>().rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+
+        Transform bulletTransform = GetComponentInChildren<Transform>();
+        GameObject gm = Instantiate(PrefabManager.instance.towerBullet01, bulletTransform.position, bulletTransform.rotation);
+        gm.GetComponentInChildren<BulletController>().damage = damage;
     }
 
     void Cooldown()
     {
-        if ((Time.time - lastShootTime) > 2.0f)
+        if ((Time.time - lastShootTime) > 1.0f)
         {
             overheat = false;
         }

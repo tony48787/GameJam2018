@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerManager : MonoBehaviour {
+public class PrefabManager : MonoBehaviour {
 
-    public GameObject bullet01;
+    public GameObject towerBullet01;
 
-    public static TowerManager instance = null;
+    public GameObject healthBarType;
+
+    public GameObject tile;
+
+    public GameObject tower;
+
+    public GameObject enemy;
+
+    public static PrefabManager instance = null;
 
     //Awake is always called before any Start functions
     void Awake()
