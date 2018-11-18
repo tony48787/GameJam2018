@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class HeroController : MonoBehaviour {
 
+	public float maxHp = 100f;
 	public float hp = 100f;
 	public Text hpText;
 	public float maxChargeBarValue = 1000f;
@@ -17,7 +18,7 @@ public class HeroController : MonoBehaviour {
 	public float chargeCoolDownDuration = 3f;
 	private float chargeCoolDownCountdown = 0f;
 	public float walkSpeed;
-	public Collider2D attackCollider;
+	private Collider2D attackCollider;
 	public GameObject bulletType;
 	public Transform firePosition;
 	public GameObject swordWindType;
@@ -45,7 +46,9 @@ public class HeroController : MonoBehaviour {
 		rb2d = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		attackCollider = transform.Find("AttackCollider").GetComponent<Collider2D>();
 		attackCollider.enabled = false;
+		hp = maxHp;
 		UpdateHpText();
 		UpdateChargeText();
 	}

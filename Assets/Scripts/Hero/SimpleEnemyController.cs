@@ -6,23 +6,35 @@ using UnityEngine.UI;
 public class SimpleEnemyController : MonoBehaviour {
 
 	public Text hpText;
+	public float maxHp = 100f;
 	public float hp = 100f;
 	public float damage = 10f;
 	public float repelForce = 70f;
 	private Rigidbody2D rb2d;
+	public HealthBar healthBarType;
+	private HealthBar healthBar;
+
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
-		UpdateHpText();
+		hp = maxHp;
+		healthBar = Instantiate(healthBarType,
+			new Vector2(transform.position.x, transform.position.y + 1),
+			new Quaternion(0, 0, 0, 0));
+		UpdateHpBar();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		healthBar.transform.position = new Vector2(transform.position.x, transform.position.y + 1);
 	}
 
 	void UpdateHpText() {
 		hpText.text = "Enemy HP: " + hp.ToString();
+	}
+
+	void UpdateHpBar() {
+		healthBar.SetHealthRatio(hp/maxHp);
 	}
 
 	void OnDamaged(DamageMessage msg) {
@@ -30,7 +42,7 @@ public class SimpleEnemyController : MonoBehaviour {
 		Vector2 repelForce = msg.repelForce;
 		hp -= receivedDamage;
 		rb2d.AddForce(repelForce, ForceMode2D.Impulse);
-		UpdateHpText();
+		UpdateHpBar();
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
