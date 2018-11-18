@@ -20,15 +20,13 @@ public class LevelManagerScript : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        tileMaps = readTextFiles();
+        tileMaps = ReadTextFiles();
         CreateLevel();
     }
 
     private void CreateLevel()
     {
         Vector3 worldStart = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height));
-
-        string[] tileMaps = readTextFiles();
 
         int rowMax = tileMaps.Length;
         int colMax = tileMaps[0].Length;
@@ -89,11 +87,9 @@ public class LevelManagerScript : MonoBehaviour {
         }
     }
 
-    private string[] readTextFiles()
+    private string[] ReadTextFiles()
     {
-        AssetDatabase.ImportAsset("Assets/Text/level.txt");
         TextAsset textAsset = (TextAsset) Resources.Load("level");
-        Debug.Log(textAsset.text);  
         return textAsset.text.Split(new[] { Environment.NewLine },
             StringSplitOptions.None);
     }
