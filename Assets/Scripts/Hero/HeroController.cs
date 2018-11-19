@@ -202,12 +202,14 @@ public class HeroController : MonoBehaviour {
 			if (currentAttackType == PlayerAttackType.Shoot) {
 				Debug.Log("Do Charge Shoot!");
 				// TODO: handle charge shoot
+				animator.Play("HeroChargeShoot");
 				GameObject explosiveBullet = Instantiate(explosiveBulletType, firePosition.position, firePosition.rotation);
 			}
 			else if (currentAttackType == PlayerAttackType.Slice) {
 				Debug.Log("Do Charge Slice!");
 				// TODO: handle charge slice
 				// spawn sword wind
+				animator.Play("HeroChargeFight");
 				GameObject swordWind = Instantiate(swordWindType, transform.position, transform.rotation);
 			}
 			currentChargeValue = 0;

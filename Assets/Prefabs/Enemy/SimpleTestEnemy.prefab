@@ -101,9 +101,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpText: {fileID: 0}
+  maxHp: 100
   hp: 100
   damage: 10
   repelForce: 70
+  healthBarType: {fileID: 0}
 --- !u!114 &114978000301418266
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -117,6 +119,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 1
   Target: {fileID: 0}
+  coinDrop: 10
+  health: 100
 --- !u!212 &212501936853087092
 SpriteRenderer:
   m_ObjectHideFlags: 1
