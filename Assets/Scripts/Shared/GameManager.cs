@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance = null;             //Static instance of GameManager which allows it to be accessed by any other script.                    //Store a reference to our BoardManager which will set up the level.
-    private int wave = 1;                                  //Current level number, expressed in game as "Day 1".
-    private int coin = 0;
+    public int wave = 1;                                  //Current level number, expressed in game as "Day 1".
+    public int coin = 0;
 
     public float vertExtent;
 
