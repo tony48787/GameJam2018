@@ -7,8 +7,7 @@ public class ExplosionController : MonoBehaviour {
 	public float damage = 50f;
 	public float forceMagnitude = 500f;
 	public float forceVariation = 200f;
-
-	private float maxLifeTime = 1f;
+	private float maxLifeTime = 5f/12f;		// frame set in animation
 	private float activeTime = 0f;
 
 	private CircleCollider2D circleCollider2D;
