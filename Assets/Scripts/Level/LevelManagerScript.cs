@@ -7,28 +7,22 @@ using UnityEngine.UI;
 
 public class LevelManagerScript : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject tile;
-
-    [SerializeField]
-    private GameObject tower;
-
     private string[] tileMaps;
 
     private GameObject startWaveBtn;
 
+    private GameObject player;
+
     // Use this for initialization
     void Start ()
     {
-        tileMaps = readTextFiles();
+        tileMaps = ReadTextFiles();
         CreateLevel();
     }
 
     private void CreateLevel()
     {
         Vector3 worldStart = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height));
-
-        string[] tileMaps = readTextFiles();
 
         int rowMax = tileMaps.Length;
         int colMax = tileMaps[0].Length;
@@ -39,15 +33,17 @@ public class LevelManagerScript : MonoBehaviour {
                 PlaceTile(row, col, worldStart);
             }
         }
+
     }
 
     private void PlaceTile(int row, int col, Vector3 worldStart)
     {
+        GameObject tilePrefab = PrefabManager.instance.tile;
         if (int.Parse(tileMaps[row][col].ToString()) == 1)
         {
-            float tileSize = tile.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+            float tileSize = tilePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
 
-            GameObject newTile = Instantiate(tile);
+            GameObject newTile = Instantiate(tilePrefab);
 
             newTile.transform.position = new Vector3(worldStart.x + (tileSize * col), worldStart.y - (tileSize * row), 0);
 
@@ -59,11 +55,6 @@ public class LevelManagerScript : MonoBehaviour {
     void Update () {
 		
 	}
-
-    public GameObject getTower()
-    {
-        return tower;
-    }
 
     public void StartWave()
     {
@@ -89,11 +80,9 @@ public class LevelManagerScript : MonoBehaviour {
         }
     }
 
-    private string[] readTextFiles()
+    private string[] ReadTextFiles()
     {
-        AssetDatabase.ImportAsset("Assets/Text/level.txt");
         TextAsset textAsset = (TextAsset) Resources.Load("level");
-        Debug.Log(textAsset.text);  
         return textAsset.text.Split(new[] { Environment.NewLine },
             StringSplitOptions.None);
     }

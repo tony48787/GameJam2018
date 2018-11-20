@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     private int wave = 1;                                  //Current level number, expressed in game as "Day 1".
     private int coin = 0;
 
+    public float vertExtent;
+
+    public float horzExtent;
+
     //Awake is always called before any Start functions
     void Awake()
     {
@@ -31,6 +35,8 @@ public class GameManager : MonoBehaviour
     void InitGame()
     {
         //SceneManager.LoadScene("menu");
+        vertExtent = Camera.main.orthographicSize;
+        horzExtent = vertExtent * Screen.width / Screen.height;
     }
 
     void EndGame()

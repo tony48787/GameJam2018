@@ -14,6 +14,8 @@ public class SimpleEnemyController : MonoBehaviour {
 	public HealthBar healthBarType;
 	private HealthBar healthBar;
 
+    private int coinDrop = 10;
+
 	// Use this for initialization
 	void Start () {
 		rb2d = GetComponent<Rigidbody2D>();
@@ -39,11 +41,21 @@ public class SimpleEnemyController : MonoBehaviour {
 
 	void OnDamaged(DamageMessage msg) {
 		float receivedDamage = msg.damage;
+        Debug.Log(receivedDamage);
 		Vector2 repelForce = msg.repelForce;
 		hp -= receivedDamage;
 		rb2d.AddForce(repelForce, ForceMode2D.Impulse);
 		UpdateHpBar();
-	}
+
+        if (hp <= 0)
+        {
+            GameManager.instance.IncrementCoinBy(coinDrop);
+            FindObjectOfType<EnemySpawner>().UpdateCurrentCountBy();
+            Destroy(gameObject);
+            Destroy(healthBar.gameObject);
+        }
+        
+    }
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.collider.CompareTag("Player")) {
