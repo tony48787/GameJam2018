@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerRule {
-
+    /*
+     * 
+     * https://gamedev.stackexchange.com/questions/20934/how-to-create-adjustable-formula-for-rpg-level-up-requirements
+     * 
+     * 
+    */
     private int level;
     private long valForFirstStep;
     private long valForLastStep;
