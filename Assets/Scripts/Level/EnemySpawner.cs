@@ -5,22 +5,26 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour {
 
     [SerializeField]
-    private int spawnCount = 1;
+    private long spawnCount = 1;
 
-    private int currentCount;
+    private long currentCount;
 
     private float vertExtent;
 
     private float horzExtent;
 
+    private PowerRule powerRule;
+
     // Use this for initialization
     void Start () {
-        vertExtent = Camera.main.orthographicSize;
-        horzExtent = vertExtent * Screen.width / Screen.height;
+        vertExtent = GameManager.instance.vertExtent;
+        horzExtent = GameManager.instance.horzExtent;
+        powerRule = new PowerRule(20, 1, 200);
     }
 
     void StartSpawn()
     {
+        spawnCount = powerRule.retrieveValueForLevel(GameManager.instance.wave);
         currentCount = spawnCount;
 
         for (int i = 0; i < spawnCount; i++)
