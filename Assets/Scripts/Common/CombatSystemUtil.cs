@@ -35,3 +35,27 @@ public struct DamageMessage {
 		this.repelForce = damageForce;
 	} 
 };
+
+public struct PlayerStatus {
+	public float maxHp;
+	public float currentHp;
+	public float maxChargeBarValue;
+	public float currentChargeBarValue;
+	public float chargeCoolDownDuration;
+	public float chargeBarIncreaseRate;
+	public float chargeBarDecreaseRate;
+	public float shootCoolDownDuration;
+	public float invincibleDuration;
+	public PlayerAttackType currentAttackType;
+};
+
+public struct WeaponStatus {
+	public float bulletDamage;
+	public float bulletSpeed;
+	public float swordDamage;
+	public float swordRepelForce;
+	public float chargeBulletDamage;
+	public float chargeBulletSpeed;
+	public float chargeSwordDamage;
+	public float chargeSwordSpeed;
+}

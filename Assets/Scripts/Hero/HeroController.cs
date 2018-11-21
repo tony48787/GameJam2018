@@ -5,24 +5,28 @@ using UnityEngine.UI;
 
 public class HeroController : MonoBehaviour {
 
+	private GameManager gm;
+	private PlayerStatus status;
+	private PrefabManager pm;
+
+	private HealthBar healthBar;
+	private ChargeBar chargeBar;
+
 	public float maxHp = 100f;
 	public float hp = 100f;
 	public Text hpText;
 	public float maxChargeBarValue = 1000f;
 	public Text chargeText;
 	private float currentChargeValue = 0f;
-	private float chargeBarIncreaseRate = 5f;
-	private float chargeBarDecreaseRate = 10f;
+	public float chargeBarIncreaseRate = 5f;
+	public float chargeBarDecreaseRate = 10f;
 	private bool canChargeAttack = false;
 	private bool holdingCharge = false;
 	public float chargeCoolDownDuration = 3f;
 	private float chargeCoolDownCountdown = 0f;
 	public float walkSpeed;
 	private Collider2D attackCollider;
-	public GameObject bulletType;
 	public Transform firePosition;
-	public GameObject swordWindType;
-	public GameObject explosiveBulletType;
 	private Rigidbody2D rb2d;
 	private Animator animator;
 	private SpriteRenderer spriteRenderer;
@@ -43,14 +47,22 @@ public class HeroController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		gm = GameManager.instance;
+		status = gm.playerStatus;
+		pm = PrefabManager.instance;
+
 		rb2d = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		attackCollider = transform.Find("AttackCollider").GetComponent<Collider2D>();
 		attackCollider.enabled = false;
-		hp = maxHp;
-		UpdateHpText();
-		UpdateChargeText();
+		
+		// UpdateHpText();
+		// UpdateChargeText();
+		healthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
+		chargeBar = GameObject.Find("ChargeBar").GetComponent<ChargeBar>();
+		UpdateHealthBar();
+		UpdateChargeBar();
 	}
 	
 	// Update is called once per frame
@@ -63,8 +75,10 @@ public class HeroController : MonoBehaviour {
 		HandleAttack();
 		HandleChargeSkill();
 		HandleInvinciblePeriod();
-		UpdateHpText();
-		UpdateChargeText();
+		// UpdateHpText();
+		// UpdateChargeText();
+		UpdateHealthBar();
+		UpdateChargeBar();
 	}
 
 	void FixedUpdate() {
@@ -85,17 +99,17 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void SwitchAttackType() {
-		switch (currentAttackType) {
+		switch (status.currentAttackType) {
 			case PlayerAttackType.Shoot:
-				currentAttackType = PlayerAttackType.Slice;
+				status.currentAttackType = PlayerAttackType.Slice;
 				Debug.Log("Change attack type from shoot to slice");
 				break;
 			case PlayerAttackType.Slice:
-				currentAttackType = PlayerAttackType.Shoot;
+				status.currentAttackType = PlayerAttackType.Shoot;
 				Debug.Log("Change attack type from slice to shoot");
 				break;
 			default:
-				currentAttackType = PlayerAttackType.Shoot;
+				status.currentAttackType = PlayerAttackType.Shoot;
 				Debug.Log("Change attack type from unknown to slice");
 				break;
 		}
@@ -104,7 +118,7 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void HandleShoot() {
-		if (Input.GetKeyDown("mouse 0") && currentAttackType == PlayerAttackType.Shoot) {
+		if (Input.GetKeyDown("mouse 0") && status.currentAttackType == PlayerAttackType.Shoot) {
 			holdingShoot = true;
 		}
 		if (Input.GetKeyUp("mouse 0")) {
@@ -116,7 +130,7 @@ public class HeroController : MonoBehaviour {
 				shootCoolDownCountdown -= Time.deltaTime;
 			}
 			else {
-				shootCoolDownCountdown = shootCoolDownDuration;
+				shootCoolDownCountdown = status.shootCoolDownDuration;
 				FireBullet();
 			}
 		}
@@ -126,11 +140,11 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void FireBullet() {
-		GameObject bullet = Instantiate(bulletType, firePosition.position, firePosition.rotation);
+		GameObject bullet = Instantiate(PrefabManager.instance.bulletType, firePosition.position, firePosition.rotation);
 	}
 
 	void HandleAttack() {
-		if (Input.GetKeyDown("mouse 0") && currentAttackType == PlayerAttackType.Slice) {
+		if (Input.GetKeyDown("mouse 0") && status.currentAttackType == PlayerAttackType.Slice) {
 			// pressed attack key
 			holdingAttack = true;
 		}
@@ -179,42 +193,44 @@ public class HeroController : MonoBehaviour {
 		else {
 			chargeCoolDownCountdown = 0;
 			if (holdingCharge) {
-				if (currentChargeValue < maxChargeBarValue) {
-					currentChargeValue += chargeBarIncreaseRate;
+				if (status.currentChargeBarValue < status.maxChargeBarValue) {
+					status.currentChargeBarValue += chargeBarIncreaseRate;
 				}
 				else {
-					currentChargeValue = maxChargeBarValue;
+					status.currentChargeBarValue = status.maxChargeBarValue;
 				}
 			}
 			else {
-				if (currentChargeValue > 0) {
-					currentChargeValue -= chargeBarDecreaseRate;
+				if (status.currentChargeBarValue > 0) {
+					status.currentChargeBarValue -= chargeBarDecreaseRate;
 				}
 				else {
-					currentChargeValue = 0;
+					status.currentChargeBarValue = 0;
 				}
 			}
 		}
-		canChargeAttack = (currentChargeValue >= maxChargeBarValue);
+		canChargeAttack = (status.currentChargeBarValue >= status.maxChargeBarValue);
 
 		// handle charge attack skill
 		if (Input.GetKey("mouse 0") && canChargeAttack) {
-			if (currentAttackType == PlayerAttackType.Shoot) {
+			if (status.currentAttackType == PlayerAttackType.Shoot) {
 				Debug.Log("Do Charge Shoot!");
 				// TODO: handle charge shoot
 				animator.Play("HeroChargeShoot");
-				GameObject explosiveBullet = Instantiate(explosiveBulletType, firePosition.position, firePosition.rotation);
+				GameObject explosiveBullet = Instantiate(pm.explosiveBulletType,
+					firePosition.position, firePosition.rotation);
 			}
-			else if (currentAttackType == PlayerAttackType.Slice) {
+			else if (status.currentAttackType == PlayerAttackType.Slice) {
 				Debug.Log("Do Charge Slice!");
 				// TODO: handle charge slice
 				// spawn sword wind
 				animator.Play("HeroChargeFight");
-				GameObject swordWind = Instantiate(swordWindType, transform.position, transform.rotation);
+				GameObject swordWind = Instantiate(pm.swordWindType,
+					transform.position, transform.rotation);
 			}
-			currentChargeValue = 0;
+			status.currentChargeBarValue = 0;
 			canChargeAttack = false;
-			chargeCoolDownCountdown = chargeCoolDownDuration;
+			chargeCoolDownCountdown = status.chargeCoolDownDuration;
 		}
 	}
 
@@ -226,15 +242,23 @@ public class HeroController : MonoBehaviour {
 		chargeText.text = currentChargeValue.ToString() + "/" + maxChargeBarValue.ToString();
 	}
 
+	void UpdateHealthBar() {
+		healthBar.SetHealthRatio(status.currentHp/status.maxHp);
+	}
+
+	void UpdateChargeBar() {
+		chargeBar.SetChargeRatio(status.currentChargeBarValue/status.maxChargeBarValue);
+	}
+
 	void OnDamaged(DamageMessage msg) {
 		float receivedDamage = msg.damage;
 		Vector2 repelForce = msg.repelForce;
 		if (!isInvincible) {
 			// take damage
-			hp -= receivedDamage;
+			status.currentHp -= receivedDamage;
 			isInvincible = true;
 			isTransparent = true;
-			invincibleCountdown = invincibleDuration;
+			invincibleCountdown = status.invincibleDuration;
 			spriteBlinkCountdown = spriteBlinkDuration;
 
 			// repel from enemy
@@ -264,7 +288,7 @@ public class HeroController : MonoBehaviour {
 				}
 			}
 			else {
-				invincibleCountdown = invincibleDuration;
+				invincibleCountdown = status.invincibleDuration;
 				isInvincible = false;
 				Color tmp = spriteRenderer.color;
 				tmp.a = 1f;

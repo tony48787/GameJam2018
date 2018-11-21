@@ -51,3 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019da5dadaa2c474a981acc9136c2ef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wave: 1
+  coin: 0
+  player: {fileID: 1075108965482662, guid: 6025179efcf017042883017d1373542d, type: 2}
+  vertExtent: 0
+  horzExtent: 0

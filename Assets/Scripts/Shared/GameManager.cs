@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
     public int wave = 1;                                  //Current level number, expressed in game as "Day 1".
     public int coin = 0;
 
+    // Player related variables
+    public GameObject player;
+    public PlayerStatus playerStatus;
+    public WeaponStatus weaponStatus;
+
     public float vertExtent;
 
     public float horzExtent;
@@ -37,6 +42,33 @@ public class GameManager : MonoBehaviour
         //SceneManager.LoadScene("menu");
         vertExtent = Camera.main.orthographicSize;
         horzExtent = vertExtent * Screen.width / Screen.height;
+
+        // set player status variables
+        playerStatus.maxHp = 100f;
+        playerStatus.currentHp = 100f;
+        playerStatus.maxChargeBarValue = 1000f;
+        playerStatus.currentChargeBarValue = 0f;
+        playerStatus.chargeCoolDownDuration = 3f;
+        playerStatus.chargeBarIncreaseRate = 5f;
+        playerStatus.chargeBarDecreaseRate = 10f;
+        playerStatus.shootCoolDownDuration = 0.2f;
+        playerStatus.invincibleDuration = 2f;
+        playerStatus.currentAttackType = PlayerAttackType.Shoot;
+
+        // set weapon status variables
+        weaponStatus.bulletDamage = 10f;
+        weaponStatus.bulletSpeed = 15f;
+        weaponStatus.swordDamage = 10f;
+        weaponStatus.swordRepelForce = 10f;
+        weaponStatus.chargeBulletDamage = 50f;
+        weaponStatus.chargeBulletSpeed = 10f;
+        weaponStatus.chargeSwordDamage = 100f;
+        weaponStatus.chargeSwordSpeed = 3f;
+    }
+
+    void Start()
+    {
+        GameObject player = Instantiate(PrefabManager.instance.player, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
     }
 
     void EndGame()

@@ -24,6 +24,8 @@ public class HealthBar : MonoBehaviour {
 		border.localScale = new Vector3(width+borderSize*2, height+borderSize*2);
 		barSprite.localScale = new Vector3(width, height);
 		background.localScale = new Vector3(width, height);
+		bar.localPosition = new Vector3(bar.localPosition.x*width/100f, 0);
+		barSprite.localPosition = new Vector3(barSprite.localPosition.x*width/100f, 0);
 
 		currentHpRatio = hpRatio;
 	}

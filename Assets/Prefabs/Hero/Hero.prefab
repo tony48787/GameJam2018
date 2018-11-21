@@ -222,14 +222,11 @@ MonoBehaviour:
   hpText: {fileID: 0}
   maxChargeBarValue: 500
   chargeText: {fileID: 0}
+  chargeBarIncreaseRate: 5
+  chargeBarDecreaseRate: 10
   chargeCoolDownDuration: 3
   walkSpeed: 100
-  bulletType: {fileID: 1151943239449746, guid: 719823623a196174fba774932b3a9679, type: 2}
   firePosition: {fileID: 4567158579156630}
-  swordWindType: {fileID: 1170116041238402, guid: 3924eda2d41ec2049b0728208f0c44a7,
-    type: 2}
-  explosiveBulletType: {fileID: 1505990854141004, guid: 48ede3a2de52c1e4d907a932af5bafc9,
-    type: 2}
   attackAnimDuration: 0.33333334
   shootCoolDownDuration: 0.2
   invincibleDuration: 2
