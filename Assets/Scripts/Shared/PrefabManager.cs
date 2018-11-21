@@ -8,11 +8,23 @@ public class PrefabManager : MonoBehaviour {
 
     public GameObject healthBarType;
 
+    public GameObject chargeBarType;
+
     public GameObject tile;
 
     public GameObject tower;
 
     public GameObject enemy;
+
+    public GameObject player;
+
+    public GameObject bulletType;
+
+    public GameObject explosiveBulletType;
+
+    public GameObject swordWindType;
+
+    public GameObject healthPackType;
 
     public static PrefabManager instance = null;
 
