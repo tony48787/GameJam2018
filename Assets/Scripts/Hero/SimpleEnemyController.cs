@@ -14,7 +14,7 @@ public class SimpleEnemyController : MonoBehaviour {
 	public HealthBar healthBarType;
 	private HealthBar healthBar;
 
-    private int coinDrop = 10;
+    public int coinDrop = 10;
 
 	// Use this for initialization
 	void Start () {
