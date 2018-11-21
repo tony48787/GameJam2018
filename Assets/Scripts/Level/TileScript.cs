@@ -29,13 +29,15 @@ public class TileScript : MonoBehaviour {
 
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0) && !isOccupied)
+        if (Input.GetMouseButtonDown(0) && !isOccupied )
         {
             isOccupied = true;
 
             GameObject tower = Instantiate(PrefabManager.instance.tower, transform.position, Quaternion.identity);
 
             tower.transform.Translate(new Vector3(0.3f, -0.25f));
+
+            GameManager.instance.IncrementCoinBy(-tower.GetComponent<TowerController>().buildCost);
         }
     }
 }

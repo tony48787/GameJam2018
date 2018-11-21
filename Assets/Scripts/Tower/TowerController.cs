@@ -13,6 +13,8 @@ public class TowerController : MonoBehaviour {
 
     private float damage = 50.0f;
 
+    public int buildCost = 100;
+
     // Use this for initialization
     void Start () {
 		
