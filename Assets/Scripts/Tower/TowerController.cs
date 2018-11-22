@@ -11,9 +11,22 @@ public class TowerController : MonoBehaviour {
 
     private GameObject enemy;
 
-    private float damage = 50.0f;
+    public int level = 1;
 
-    public int buildCost = 100;
+    public float damage = 50.0f;
+
+    public void UpgradeTower()
+    {
+        long upgradeCost = GetComponentInParent<TowerType>().powerRuleForUpgradeCost.retrieveValueForLevel(level);
+        if (GameManager.instance.coin >= upgradeCost)
+        {
+            level += 1;
+            damage = GetComponentInParent<TowerType>().powerRuleForDamage.retrieveValueForLevel(level);
+
+            GameManager.instance.IncrementCoinBy(-upgradeCost);
+        }
+        
+    }
 
     // Use this for initialization
     void Start () {

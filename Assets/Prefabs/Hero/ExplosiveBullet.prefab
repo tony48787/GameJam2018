@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4916183854156398}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ExplosiveBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 50917976330874090}
   - component: {fileID: 61932558923609654}
   - component: {fileID: 114579737824095520}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ExplosiveBulletBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

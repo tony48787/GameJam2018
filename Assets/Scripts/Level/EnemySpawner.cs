@@ -52,7 +52,7 @@ public class EnemySpawner : MonoBehaviour {
 
         newEnemy.GetComponent<EnemyController>().Target = FindObjectOfType<EnemyTarget>();
 
-        float randX = Random.Range(-horzExtent, +horzExtent);
+        float randX = Random.Range(-horzExtent * 0.8f, +horzExtent * 0.8f);
         float randY = Random.Range(vertExtent, vertExtent + vertExtent / 10);
         newEnemy.transform.position = new Vector3(randX, randY, 0);
 
