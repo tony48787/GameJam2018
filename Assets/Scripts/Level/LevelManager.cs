@@ -5,18 +5,15 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelManagerScript : MonoBehaviour {
+public class LevelManager : MonoBehaviour {
 
     private string[] tileMaps;
 
     private GameObject startWaveBtn;
 
-    private GameObject player;
-
     // Use this for initialization
     void Start ()
     {
-        tileMaps = ReadTextFiles();
         CreateLevel();
     }
 
@@ -24,8 +21,13 @@ public class LevelManagerScript : MonoBehaviour {
     {
         Vector3 worldStart = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height));
 
-        int rowMax = tileMaps.Length;
-        int colMax = tileMaps[0].Length;
+        GameObject tilePrefab = PrefabManager.instance.tile;
+        float tileSize = tilePrefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        int rowMax = (int) Math.Floor(Math.Abs(worldStart.y) / tileSize * 2);
+        int colMax = (int) Math.Floor(Math.Abs(worldStart.x) / tileSize * 2);
+
+        tileMaps = CreateTileMaps(rowMax, colMax);
+
         for (int row = 0; row < rowMax; row++)
         {
             for (int col = 0; col < colMax; col++)
@@ -85,5 +87,26 @@ public class LevelManagerScript : MonoBehaviour {
         TextAsset textAsset = (TextAsset) Resources.Load("level");
         return textAsset.text.Split(new[] { Environment.NewLine },
             StringSplitOptions.None);
+    }
+
+    private string[] CreateTileMaps(int rowMax, int colMax)
+    {
+        string[] tileMaps = new string[rowMax];
+        for (int row = 0; row < rowMax; row++)
+        {
+            string rowStr = "";
+            for (int col = 0; col < colMax; col++)
+            {
+                if (row == rowMax - 1 || col == 0 || col == colMax - 1)
+                {
+                    rowStr += "1";
+                } else
+                {
+                    rowStr += "0";
+                }
+            }
+            tileMaps[row] = rowStr;
+        }
+        return tileMaps;
     }
 }

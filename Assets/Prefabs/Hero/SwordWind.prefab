@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 60681267396715450}
   - component: {fileID: 95315177566974626}
   - component: {fileID: 114588284473383682}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SwordWind
   m_TagString: Untagged
   m_Icon: {fileID: 0}

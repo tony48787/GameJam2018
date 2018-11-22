@@ -87,7 +87,10 @@ public class HeroController : MonoBehaviour {
 		Vector2 movement = new Vector2(moveHorizontal, moveVertical);
 		rb2d.AddForce(movement * walkSpeed);
 		animator.SetFloat("Speed", rb2d.velocity.magnitude);
-	}
+
+        if (transform.position.y > GameManager.instance.vertExtent * 0.9f)
+            transform.position = new Vector3(transform.position.x, GameManager.instance.vertExtent * 0.9f, transform.position.z);
+    }
 
 	void RotatePlayerToMouse() {
 		Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);

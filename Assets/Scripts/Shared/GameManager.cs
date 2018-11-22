@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance = null;             //Static instance of GameManager which allows it to be accessed by any other script.                    //Store a reference to our BoardManager which will set up the level.
     public int wave = 1;                                  //Current level number, expressed in game as "Day 1".
-    public int coin = 0;
+    public long coin = 0;
 
     // Player related variables
     public GameObject player;
@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
         weaponStatus.chargeBulletSpeed = 10f;
         weaponStatus.chargeSwordDamage = 100f;
         weaponStatus.chargeSwordSpeed = 3f;
+
+        IncrementCoinBy(1000);
     }
 
     void Start()
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
         GameObject.Find("WaveText").GetComponent<TextMeshProUGUI>().text = "Wave: " + wave;
     }
 
-    public void IncrementCoinBy(int delta = 1)
+    public void IncrementCoinBy(long delta = 1)
     {
         coin += delta;
 

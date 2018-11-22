@@ -35,8 +35,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4857012847844676}
   - component: {fileID: 212986514423931256}
-  - component: {fileID: 114003228139943068}
   - component: {fileID: 114358790705317536}
+  - component: {fileID: 114570056934633768}
   m_Layer: 0
   m_Name: Tower_01
   m_TagString: Untagged
@@ -71,17 +71,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114003228139943068
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1907708781081872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7631fcca002111429891d6fcd549c5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114358790705317536
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -93,6 +82,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5880ec983087ae4cb36fc6c3703740e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level: 1
+  damage: 50
+--- !u!114 &114570056934633768
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1907708781081872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c7b96cffe3e3ba49b9ba9b1980a1dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildCost: 100
+  baseDamage: 10
+  towerPrefab: {fileID: 1907708781081872}
 --- !u!212 &212986514423931256
 SpriteRenderer:
   m_ObjectHideFlags: 1
