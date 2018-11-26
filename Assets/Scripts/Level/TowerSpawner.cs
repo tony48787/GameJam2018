@@ -21,7 +21,7 @@ public class TowerSpawner : MonoBehaviour {
                 GameObject tower = Instantiate(selectedTowerPrefab, spawnTransform.position, Quaternion.identity);
                 tower.transform.Translate(new Vector3(0.3f, -0.25f));
 
-                GameManager.instance.IncrementCoinBy(-tower.GetComponent<TowerType>().buildCost);
+                GameManager.instance.IncrementCoinBy(-tower.GetComponentInChildren<TowerType>().buildCost);
 
                 return tower;
             } else
@@ -40,8 +40,23 @@ public class TowerSpawner : MonoBehaviour {
         selectedTowerPrefab = towerPrefab;
     }
 
+    public long GetTowerBuildCost()
+    {
+        return FetchTowerBuildCost();
+    }
+
+    public bool CheckCanBuildTower()
+    {
+        long buildCost = FetchTowerBuildCost();
+        if (GameManager.instance.coin >= buildCost)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private long FetchTowerBuildCost()
     {
-        return selectedTowerPrefab.GetComponent<TowerType>().buildCost;
+        return selectedTowerPrefab.GetComponentInChildren<TowerType>().buildCost;
     }
 }

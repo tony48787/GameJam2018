@@ -26,6 +26,12 @@ public class PrefabManager : MonoBehaviour {
 
     public GameObject healthPackType;
 
+    public Texture2D crosshairCursorType;
+
+    public Texture2D addTowerCursorType;
+
+    public Texture2D upgradeTowerCursorType;
+
     public static PrefabManager instance = null;
 
     //Awake is always called before any Start functions

@@ -68,3 +68,7 @@ MonoBehaviour:
     type: 2}
   healthPackType: {fileID: 1530334822129248, guid: 44cbae7e3be56034f8a2ab8a6e17b066,
     type: 2}
+  crosshairCursorType: {fileID: 2800000, guid: 639889de748b58745b248f0b8529af20, type: 3}
+  addTowerCursorType: {fileID: 2800000, guid: bef2bcf55b6145b4f9c2a72ca2769bfe, type: 3}
+  upgradeTowerCursorType: {fileID: 2800000, guid: 4f9c5c5c2c1aa174cb354a7bbc1e4c44,
+    type: 3}
