@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Target = FindObjectOfType<EnemyTarget>();
+
     }
 
     void FixedUpdate()
@@ -27,14 +27,14 @@ public class EnemyController : MonoBehaviour
         if (Target)
         {
             //look at target
-            Vector3 diff = Target.transform.position - transform.position;
+            Vector3 diff = Target.gameObject.transform.position - transform.position;
             diff.Normalize();
             float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, rot_z + 90);
 
 
             //move towards target
-            transform.position = Vector2.MoveTowards(transform.position, Target.transform.position, Speed * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, Target.gameObject.transform.position, Speed * Time.deltaTime);
         }
         
     }

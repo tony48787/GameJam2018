@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour {
 
-	private GameManager gm;
+    public BulletOwner owner = BulletOwner.HERO;
+
+    private GameManager gm;
 	private WeaponStatus status;
 
 	public float speed = 10f;
@@ -12,6 +14,7 @@ public class BulletController : MonoBehaviour {
 	private Rigidbody2D bulletBody;
 	private float maxLifeTime = 3f;
 	private float activeTime = 0f;
+    
 	// Use this for initialization
 	void Start () {
 		gm = GameManager.instance;
@@ -30,11 +33,22 @@ public class BulletController : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
-		if (other.collider.CompareTag("Enemy")) {
+		if (other.collider.CompareTag("Enemy") && owner == BulletOwner.HERO) {
 			Debug.Log("Bullet collide with Enemy");
 			DamageMessage msg = new DamageMessage(status.bulletDamage);
 			other.collider.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
-		}
-		Destroy(transform.parent.gameObject);
+		} else if (other.collider.CompareTag("Player") && owner == BulletOwner.ENEMY)
+        {
+            Debug.Log("Bullet collide with Enemy");
+            DamageMessage msg = new DamageMessage(status.bulletDamage);
+            other.collider.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
+        }
+        Destroy(transform.parent.gameObject);
 	}
+}
+
+public enum BulletOwner
+{
+    HERO,
+    ENEMY
 }

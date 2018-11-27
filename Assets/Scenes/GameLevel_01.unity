@@ -307,42 +307,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114689520211658204, guid: 24b27ca8b4873ff4790dc2cc889eb724,
-        type: 2}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1075108965482662, guid: 6025179efcf017042883017d1373542d,
-        type: 2}
-    - target: {fileID: 114689520211658204, guid: 24b27ca8b4873ff4790dc2cc889eb724,
-        type: 2}
-      propertyPath: bulletType
-      value: 
-      objectReference: {fileID: 1151943239449746, guid: 719823623a196174fba774932b3a9679,
-        type: 2}
-    - target: {fileID: 114689520211658204, guid: 24b27ca8b4873ff4790dc2cc889eb724,
-        type: 2}
-      propertyPath: explosiveBulletType
-      value: 
-      objectReference: {fileID: 1505990854141004, guid: 48ede3a2de52c1e4d907a932af5bafc9,
-        type: 2}
-    - target: {fileID: 114689520211658204, guid: 24b27ca8b4873ff4790dc2cc889eb724,
-        type: 2}
-      propertyPath: swordWindType
-      value: 
-      objectReference: {fileID: 1170116041238402, guid: 3924eda2d41ec2049b0728208f0c44a7,
-        type: 2}
-    - target: {fileID: 114689520211658204, guid: 24b27ca8b4873ff4790dc2cc889eb724,
-        type: 2}
-      propertyPath: healthPackType
-      value: 
-      objectReference: {fileID: 1530334822129248, guid: 44cbae7e3be56034f8a2ab8a6e17b066,
-        type: 2}
-    - target: {fileID: 114689520211658204, guid: 24b27ca8b4873ff4790dc2cc889eb724,
-        type: 2}
-      propertyPath: tower
-      value: 
-      objectReference: {fileID: 1596369602065810, guid: 0fe30843fafc3f84a87970a7f5f194e1,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24b27ca8b4873ff4790dc2cc889eb724, type: 2}
   m_IsPrefabAsset: 0

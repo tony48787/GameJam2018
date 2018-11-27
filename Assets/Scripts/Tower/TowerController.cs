@@ -18,27 +18,40 @@ public class TowerController : MonoBehaviour {
 
     private Transform bulletTransform;
 
+    public TowerOwner owner;
+
     public int level = 1;
 
     public float damage = 50.0f;
 
-    public void UpgradeTower()
+    public void UpgradeTowerByCoin()
     {
         long upgradeCost = towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
         if (GameManager.instance.coin >= upgradeCost)
         {
-            level += 1;
-            damage = towerType.powerRuleForDamage.retrieveValueForLevel(level);
+            UpgradeTower();
 
             GameManager.instance.IncrementCoinBy(-upgradeCost);
-            towerLevelText.text = level.ToString();
         }
-        
+
+    }
+
+    public void UpgradeTower()
+    {
+        level += 1;
+        damage = towerType.powerRuleForDamage.retrieveValueForLevel(level);
+        towerLevelText.text = level.ToString();
     }
 
     public long GetUpgradeCost()
     {
         return towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
+    }
+
+    public void UpdateOwnerToEnemy()
+    {
+        owner = TowerOwner.ENEMY;
+        enemy = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Use this for initialization
@@ -51,12 +64,20 @@ public class TowerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (!overheat) {
-            if (EnemyInRange())
+
+            if(owner == TowerOwner.ENEMY)
             {
                 ShootEnemy();
-            } else
+            } else if (owner == TowerOwner.HERO)
             {
-                enemy = FindClosestEnemy();
+                if (EnemyInRange())
+                {
+                    ShootEnemy();
+                }
+                else
+                {
+                    enemy = FindClosestEnemy();
+                }
             }
         } else
         {
@@ -112,6 +133,11 @@ public class TowerController : MonoBehaviour {
 
         GameObject gm = Instantiate(PrefabManager.instance.towerBullet01, bulletTransform.position, bulletTransform.rotation);
         gm.GetComponentInChildren<BulletController>().damage = damage;
+
+        if(owner == TowerOwner.ENEMY)
+        {
+            gm.GetComponentInChildren<BulletController>().owner = BulletOwner.ENEMY;
+        }
     }
 
     void Cooldown()
@@ -121,4 +147,10 @@ public class TowerController : MonoBehaviour {
             overheat = false;
         }
     }
+}
+
+public enum TowerOwner
+{
+    ENEMY,
+    HERO
 }

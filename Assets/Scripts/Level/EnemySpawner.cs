@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour {
 
@@ -22,6 +25,8 @@ public class EnemySpawner : MonoBehaviour {
 
     private bool isMiniBossSpawned;
 
+    private EnemyTarget tileTarget;
+
     // Use this for initialization
     void Start () {
         vertExtent = GameManager.instance.vertExtent;
@@ -40,17 +45,30 @@ public class EnemySpawner : MonoBehaviour {
         currentCount = spawnCount;
         isMiniBossSpawned = false;
 
+        MarkTileAsTarget();
+
         for (int i = 0; i < spawnCount; i++)
         {
             CreateSimpleEnemy();
         }
     }
 
+    private void MarkTileAsTarget()
+    {
+        TileScript[] tiles = FindObjectsOfType<TileScript>();
+        int index = (int) Random.Range(0, tiles.Length);
+
+        GameObject tile = tiles[index].gameObject;
+        tile.AddComponent<EnemyTarget>();
+        tile.GetComponent<SpriteRenderer>().color = new Color(222f / 255f, 71f / 255f, 224f /255f);
+        tileTarget = tile.GetComponent<EnemyTarget>();
+    }
+
     private GameObject CreateSimpleEnemy()
     {
         GameObject newEnemy = Instantiate(PrefabManager.instance.enemy);
 
-        newEnemy.GetComponent<EnemyController>().Target = FindObjectOfType<EnemyTarget>();
+        newEnemy.GetComponent<EnemyController>().Target = PickEnemyTarget();
 
         float randX = Random.Range(-horzExtent * 0.8f, +horzExtent * 0.8f);
         float randY = Random.Range(vertExtent, vertExtent + vertExtent / 10);
@@ -62,9 +80,32 @@ public class EnemySpawner : MonoBehaviour {
         return newEnemy;
     }
 
+    private EnemyTarget PickEnemyTarget()
+    {
+        float max = 10;
+        float odds =  Random.Range(0, max);
+        Debug.Log(odds);
+        if (odds > max * 0.9)
+        {
+            Debug.Log("HI");
+            return GameObject.FindGameObjectWithTag("Player").GetComponent<EnemyTarget>();
+        } else
+        {
+            return tileTarget;
+        }
+    }
+
     void EndSpawn()
     {
         gameObject.SendMessage("EndWave");
+
+        UnmarkTileAsTarget();
+    }
+
+    private void UnmarkTileAsTarget()
+    {
+        tileTarget.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
+        Destroy(tileTarget);
     }
 
     public void UpdateCurrentCountBy(int delta = 1)

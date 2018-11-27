@@ -10,6 +10,8 @@ public class PrefabManager : MonoBehaviour {
 
     public GameObject chargeBarType;
 
+    public GameObject progressBarType;
+
     public GameObject tile;
 
     public GameObject tower;
