@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TowerController : MonoBehaviour {
 
@@ -11,26 +12,40 @@ public class TowerController : MonoBehaviour {
 
     private GameObject enemy;
 
+    private TowerType towerType;
+
+    private TextMeshProUGUI towerLevelText;
+
+    private Transform bulletTransform;
+
     public int level = 1;
 
     public float damage = 50.0f;
 
     public void UpgradeTower()
     {
-        long upgradeCost = GetComponentInParent<TowerType>().powerRuleForUpgradeCost.retrieveValueForLevel(level);
+        long upgradeCost = towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
         if (GameManager.instance.coin >= upgradeCost)
         {
             level += 1;
-            damage = GetComponentInParent<TowerType>().powerRuleForDamage.retrieveValueForLevel(level);
+            damage = towerType.powerRuleForDamage.retrieveValueForLevel(level);
 
             GameManager.instance.IncrementCoinBy(-upgradeCost);
+            towerLevelText.text = level.ToString();
         }
         
     }
 
+    public long GetUpgradeCost()
+    {
+        return towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
+    }
+
     // Use this for initialization
     void Start () {
-		
+		towerType = GetComponent<TowerType>();
+        towerLevelText = transform.parent.GetComponentInChildren<TextMeshProUGUI>();
+        bulletTransform = GetComponentInChildren<Transform>();
 	}
 	
 	// Update is called once per frame
@@ -64,14 +79,12 @@ public class TowerController : MonoBehaviour {
         overheat = true;
         lastShootTime = Time.time;
 
-        Transform transform = GetComponent<Transform>();
         Vector3 diff = enemy.transform.position - transform.position;
         diff.Normalize();
 
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        GetComponent<Transform>().rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
 
-        Transform bulletTransform = GetComponentInChildren<Transform>();
         GameObject gm = Instantiate(PrefabManager.instance.towerBullet01, bulletTransform.position, bulletTransform.rotation);
         gm.GetComponentInChildren<BulletController>().damage = damage;
     }
