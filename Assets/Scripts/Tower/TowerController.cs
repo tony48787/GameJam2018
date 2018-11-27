@@ -29,9 +29,16 @@ public class TowerController : MonoBehaviour {
         long upgradeCost = towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
         if (GameManager.instance.coin >= upgradeCost)
         {
-            UpgradeTower();
+            if (owner == TowerOwner.HERO)
+            {
+                UpgradeTower();
 
-            GameManager.instance.IncrementCoinBy(-upgradeCost);
+                GameManager.instance.IncrementCoinBy(-upgradeCost);
+            } else
+            {
+                Debug.Log("This is not your tower anymore.");
+            }
+            
         }
 
     }

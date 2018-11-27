@@ -84,10 +84,9 @@ public class EnemySpawner : MonoBehaviour {
     {
         float max = 10;
         float odds =  Random.Range(0, max);
-        Debug.Log(odds);
-        if (odds > max * 0.9)
+
+        if (odds > max * 0.1)
         {
-            Debug.Log("HI");
             return GameObject.FindGameObjectWithTag("Player").GetComponent<EnemyTarget>();
         } else
         {
