@@ -28,7 +28,7 @@ public class PowerRule {
 
     private void computeLevelMap()
     {
-        float B = Mathf.Log(valForLastStep / valForFirstStep) / (level - 1);
+        float B = Mathf.Log((float) valForLastStep / valForFirstStep) / (level - 1);
         float A = (float) (valForFirstStep / (Mathf.Exp(B) - 1.0));
 
         for (int i = 1; i <= level; i++)
@@ -44,5 +44,11 @@ public class PowerRule {
         if (level <= 0) return 1;
         if (level > this.level) return levelToValueDict[level];
         return levelToValueDict[level];
+    }
+
+    public void printAllLevelValue(string name = "") {
+        foreach (int key in levelToValueDict.Keys) {
+            Debug.Log("rule name: " + name + ": key: " + key + " value: " + levelToValueDict[key]);
+        }
     }
 }

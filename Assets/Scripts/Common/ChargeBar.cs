@@ -34,11 +34,8 @@ public class ChargeBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Mathf.Abs(currentChargeRatio - chargeRatio) > 0.01) {
-			currentChargeRatio = Mathf.Lerp(currentChargeRatio, chargeRatio, lerpRate);
-			if (currentChargeRatio < 0) {
-				currentChargeRatio = 0;
-			}
+		if (currentChargeRatio != chargeRatio) {
+			currentChargeRatio = chargeRatio;
 			bar.localScale = new Vector3(currentChargeRatio, 1f);
 			ChangeBarColor();
 		}

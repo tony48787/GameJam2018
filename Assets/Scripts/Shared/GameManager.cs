@@ -17,7 +17,9 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerStatus playerStatus;
     public WeaponStatus weaponStatus;
-    public MouseInputStatus mouseInputStatus;
+    public MouseInputState mouseInputStatus;
+    public GameState gameState;
+    public PlayerLevelManager playerLevelManager;
 
     public float vertExtent;
 
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI coinText;
     private TextMeshProUGUI levelText;
     private Text hintText;
+    private GameObject playerMenu;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -74,7 +77,9 @@ public class GameManager : MonoBehaviour
         weaponStatus.chargeSwordDamage = 100f;
         weaponStatus.chargeSwordSpeed = 3f;
 
-        mouseInputStatus = MouseInputStatus.Attack;
+        mouseInputStatus = MouseInputState.Attack;
+
+        gameState = GameState.Transiting;
     }
 
     void Start()
@@ -86,6 +91,12 @@ public class GameManager : MonoBehaviour
         coinText = GameObject.Find("CoinText").GetComponent<TextMeshProUGUI>();
         levelText = GameObject.Find("PlayerLevelText").GetComponent<TextMeshProUGUI>();
         hintText = GameObject.Find("HintText").GetComponent<Text>();
+        playerMenu = GameObject.Find("PlayerMenu");
+
+        playerLevelManager = new PlayerLevelManager();
+        playerLevelManager.SetVitalityToLevel(1);
+        playerLevelManager.SetSkillToLevel(1);
+        playerLevelManager.SetStrengthToLevel(1);
         
         UpdateCursorTexture();
         
@@ -96,6 +107,36 @@ public class GameManager : MonoBehaviour
     {
         if (hintText.enabled) {
             UpdateHintTextPosition();
+        }
+        
+        // for level up testing use
+        if (Input.GetKeyDown("i")) {
+            playerLevelManager.LevelUpVitalityBy(1);
+            Debug.Log("Level up vitality by 1, current vitality: " + playerLevelManager.vitality);
+        }
+        if (Input.GetKeyDown("o")) {
+            playerLevelManager.LevelUpSkillBy(1);
+            Debug.Log("Level up skill by 1, current skill: " + playerLevelManager.skill);
+        }
+        if (Input.GetKeyDown("p")) {
+            playerLevelManager.LevelUpStrengthBy(1);
+            Debug.Log("Level up strength by 1, current strength: " + playerLevelManager.strength);
+        }
+        if (Input.GetKeyDown("[")) {
+            Debug.Log("maxHp: " + playerStatus.maxHp);
+            Debug.Log("maxChargeBarValue: " + playerStatus.maxChargeBarValue);
+            Debug.Log("chargeCoolDownDuration: " + playerStatus.chargeCoolDownDuration);
+            Debug.Log("chargeBarIncreaseRate: " + playerStatus.chargeBarIncreaseRate);
+            Debug.Log("chargeBarDecreaseRate: " + playerStatus.chargeBarDecreaseRate);
+            Debug.Log("shootCoolDownDuration: " + playerStatus.shootCoolDownDuration);
+            Debug.Log("bulletDamage: " + weaponStatus.bulletDamage);
+            Debug.Log("bulletSpeed: " + weaponStatus.bulletSpeed);
+            Debug.Log("swordDamage: " + weaponStatus.swordDamage);
+            Debug.Log("swordRepelForce: " + weaponStatus.swordRepelForce);
+            Debug.Log("chargeBulletDamage: " + weaponStatus.chargeBulletDamage);
+            Debug.Log("chargeBulletSpeed: " + weaponStatus.chargeBulletSpeed);
+            Debug.Log("chargeSwordDamage: " + weaponStatus.chargeSwordDamage);
+            Debug.Log("chargeSwordSpeed: " + weaponStatus.chargeSwordSpeed);
         }
     }
 
@@ -124,25 +165,26 @@ public class GameManager : MonoBehaviour
         Texture2D cursorType = null;
         CursorMode cursorMode = CursorMode.Auto;
         switch (mouseInputStatus) {
-            case MouseInputStatus.Attack:
+            case MouseInputState.Attack:
                 cursorType = PrefabManager.instance.crosshairCursorType;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
                 break;
-            case MouseInputStatus.AddTower:
+            case MouseInputState.AddTower:
                 cursorType = PrefabManager.instance.addTowerCursorType;
                 cursorMode = CursorMode.ForceSoftware;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
                 break;
-            case MouseInputStatus.UpgradeTower:
+            case MouseInputState.UpgradeTower:
                 cursorType = PrefabManager.instance.upgradeTowerCursorType;
                 cursorMode = CursorMode.ForceSoftware;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
                 break;
-            case MouseInputStatus.InteractUI:
-                cursorType = null; 
-                break;
+            case MouseInputState.InteractUI:
             default:
-                cursorType = PrefabManager.instance.crosshairCursorType;
+                cursorType = PrefabManager.instance.pickerCursorType;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/3, 0), cursorMode);
                 break;
         }
-        Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
     }
 
     public void ShowHintText(string text)

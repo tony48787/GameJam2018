@@ -5,7 +5,6 @@ using UnityEngine;
 public class ExplosiveBulletController : MonoBehaviour {
 
 	private GameManager gm;
-	private WeaponStatus status;
 
 	public float speed = 10f;
 	public float damage = 50f;
@@ -16,10 +15,9 @@ public class ExplosiveBulletController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gm = GameManager.instance;
-		status = gm.weaponStatus;
 
 		bulletBody = GetComponentInChildren<Rigidbody2D>();
-		bulletBody.velocity = bulletBody.transform.up * status.chargeBulletSpeed;
+		bulletBody.velocity = bulletBody.transform.up * gm.weaponStatus.chargeBulletSpeed;
 	}
 	
 	// Update is called once per frame
@@ -40,7 +38,7 @@ public class ExplosiveBulletController : MonoBehaviour {
 	void Explode() {
 		GameObject exp = Instantiate(explosion, transform.position, transform.rotation);
 		ExplosionController ec = exp.GetComponent<ExplosionController>();
-		ec.damage = status.chargeBulletDamage;
+		ec.damage = gm.weaponStatus.chargeBulletDamage;
 		Destroy(transform.parent.gameObject);
 	}
 }

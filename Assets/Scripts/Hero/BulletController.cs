@@ -5,7 +5,6 @@ using UnityEngine;
 public class BulletController : MonoBehaviour {
 
 	private GameManager gm;
-	private WeaponStatus status;
 
 	public float speed = 10f;
 	public float damage = 10f;
@@ -15,10 +14,9 @@ public class BulletController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gm = GameManager.instance;
-		status = gm.weaponStatus;
 
 		bulletBody = GetComponent<Rigidbody2D>();
-		bulletBody.velocity = bulletBody.transform.up * status.bulletSpeed;
+		bulletBody.velocity = bulletBody.transform.up * gm.weaponStatus.bulletSpeed;
 	}
 	
 	// Update is called once per frame
@@ -32,7 +30,7 @@ public class BulletController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.collider.CompareTag("Enemy")) {
 			Debug.Log("Bullet collide with Enemy");
-			DamageMessage msg = new DamageMessage(status.bulletDamage);
+			DamageMessage msg = new DamageMessage(gm.weaponStatus.bulletDamage);
 			other.collider.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
 		}
 		Destroy(transform.parent.gameObject);
