@@ -18,6 +18,8 @@ public class TowerController : MonoBehaviour {
 
     private Transform bulletTransform;
 
+    public bool isActive = true;
+
     public TowerOwner owner;
 
     public int level = 1;
@@ -59,6 +61,7 @@ public class TowerController : MonoBehaviour {
     {
         owner = TowerOwner.ENEMY;
         enemy = GameObject.FindGameObjectWithTag("Player");
+        GetComponent<SpriteRenderer>().color = new Color(248f / 255f, 109f / 255f, 255f / 255f);
     }
 
     // Use this for initialization
@@ -70,28 +73,33 @@ public class TowerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (!overheat) {
+        if(isActive)
+        {
+            if (!overheat)
+            {
 
-            if(owner == TowerOwner.ENEMY)
-            {
-                ShootEnemy();
-            } else if (owner == TowerOwner.HERO)
-            {
-                if (EnemyInRange())
+                if (owner == TowerOwner.ENEMY)
                 {
                     ShootEnemy();
                 }
-                else
+                else if (owner == TowerOwner.HERO)
                 {
-                    enemy = FindClosestEnemy();
+                    if (EnemyInRange())
+                    {
+                        ShootEnemy();
+                    }
+                    else
+                    {
+                        enemy = FindClosestEnemy();
+                    }
                 }
             }
-        } else
-        {
-            Cooldown();
+            else
+            {
+                Cooldown();
+            }
         }
 
-        
 	}
 
     GameObject FindClosestEnemy()

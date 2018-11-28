@@ -18,6 +18,8 @@ public class PrefabManager : MonoBehaviour {
 
     public GameObject enemy;
 
+    public GameObject enemy_tower_builder;
+
     public GameObject player;
 
     public GameObject bulletType;

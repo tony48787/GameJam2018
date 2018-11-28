@@ -64,6 +64,10 @@ public class LevelManager : MonoBehaviour {
 
         startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
         startWaveBtn.SetActive(false);
+
+        foreach (TowerController tc in FindObjectsOfType<TowerController>()) {
+            tc.isActive = true;
+        }
     }
 
     public void EndWave()
@@ -71,6 +75,11 @@ public class LevelManager : MonoBehaviour {
         startWaveBtn.SetActive(true);
 
         GameManager.instance.IncrementWaveBy();
+
+        foreach (TowerController tc in FindObjectsOfType<TowerController>())
+        {
+            tc.isActive = false;
+        }
     }
 
     public void DevpKillEnemy()

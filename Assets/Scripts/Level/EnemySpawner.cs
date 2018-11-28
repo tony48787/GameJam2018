@@ -10,6 +10,9 @@ public class EnemySpawner : MonoBehaviour {
     [SerializeField]
     private long spawnCount = 1;
 
+    [SerializeField]
+    private long towerBuilderSpawnCount = 1;
+
     private long currentCount;
 
     private float vertExtent;
@@ -17,6 +20,7 @@ public class EnemySpawner : MonoBehaviour {
     private float horzExtent;
 
     private PowerRule powerRuleForEnemyNumbers;
+    private PowerRule powerRuleForEnemyBuilderNumbers;
     private PowerRule powerRuleForEnemyMaxHp;
     private PowerRule powerRuleForEnemyCoinDrop;
 
@@ -31,7 +35,8 @@ public class EnemySpawner : MonoBehaviour {
     void Start () {
         vertExtent = GameManager.instance.vertExtent;
         horzExtent = GameManager.instance.horzExtent;
-        powerRuleForEnemyNumbers = new PowerRule(20, 1, 200);
+        powerRuleForEnemyNumbers = new PowerRule(30, 1, 100);
+        powerRuleForEnemyBuilderNumbers = new PowerRule(30, 1, 15);
         powerRuleForEnemyMaxHp = new PowerRule(20, 20, 2000);
         powerRuleForEnemyCoinDrop = new PowerRule(20, 5, 30);
 
@@ -42,14 +47,22 @@ public class EnemySpawner : MonoBehaviour {
     void StartSpawn()
     {
         spawnCount = powerRuleForEnemyNumbers.retrieveValueForLevel(GameManager.instance.wave);
-        currentCount = spawnCount;
+        towerBuilderSpawnCount = powerRuleForEnemyBuilderNumbers.retrieveValueForLevel(GameManager.instance.wave);
+        currentCount = spawnCount + towerBuilderSpawnCount;
+
         isMiniBossSpawned = false;
 
         MarkTileAsTarget();
 
+        EnemyTarget playerTarget = GameObject.FindGameObjectWithTag("Player").GetComponent<EnemyTarget>();
         for (int i = 0; i < spawnCount; i++)
         {
-            CreateSimpleEnemy();
+            CreateSimpleEnemy(PrefabManager.instance.enemy, playerTarget);
+        }
+
+        for (int i = 0; i < towerBuilderSpawnCount; i++)
+        {
+            CreateSimpleEnemy(PrefabManager.instance.enemy_tower_builder, tileTarget);
         }
     }
 
@@ -64,11 +77,11 @@ public class EnemySpawner : MonoBehaviour {
         tileTarget = tile.GetComponent<EnemyTarget>();
     }
 
-    private GameObject CreateSimpleEnemy()
+    private GameObject CreateSimpleEnemy(GameObject enemyPrefab, EnemyTarget enemyTarget)
     {
-        GameObject newEnemy = Instantiate(PrefabManager.instance.enemy);
+        GameObject newEnemy = Instantiate(enemyPrefab);
 
-        newEnemy.GetComponent<EnemyController>().Target = PickEnemyTarget();
+        newEnemy.GetComponent<EnemyController>().Target = enemyTarget;
 
         float randX = Random.Range(-horzExtent * 0.8f, +horzExtent * 0.8f);
         float randY = Random.Range(vertExtent, vertExtent + vertExtent / 10);
@@ -78,20 +91,6 @@ public class EnemySpawner : MonoBehaviour {
         newEnemy.GetComponent<SimpleEnemyController>().maxHp = powerRuleForEnemyMaxHp.retrieveValueForLevel(GameManager.instance.wave);
         newEnemy.GetComponent<SimpleEnemyController>().coinDrop = (int) powerRuleForEnemyCoinDrop.retrieveValueForLevel(GameManager.instance.wave);
         return newEnemy;
-    }
-
-    private EnemyTarget PickEnemyTarget()
-    {
-        float max = 10;
-        float odds =  Random.Range(0, max);
-
-        if (odds > max * 0.1)
-        {
-            return GameObject.FindGameObjectWithTag("Player").GetComponent<EnemyTarget>();
-        } else
-        {
-            return tileTarget;
-        }
     }
 
     void EndSpawn()
@@ -126,7 +125,8 @@ public class EnemySpawner : MonoBehaviour {
 
     void SpawnMiniBoss()
     {
-        GameObject newEnemy = CreateSimpleEnemy();
+        EnemyTarget playerTarget = GameObject.FindGameObjectWithTag("Player").GetComponent<EnemyTarget>();
+        GameObject newEnemy = CreateSimpleEnemy(PrefabManager.instance.enemy_tower_builder, playerTarget);
         newEnemy.transform.localScale = new Vector3(2, 2, 1);
         newEnemy.GetComponent<SimpleEnemyController>().maxHp = powerRuleForMiniBossMaxHp.retrieveValueForLevel(GameManager.instance.wave);
         newEnemy.GetComponent<SimpleEnemyController>().coinDrop = (int)powerRuleForMiniBossCoinDrop.retrieveValueForLevel(GameManager.instance.wave);
