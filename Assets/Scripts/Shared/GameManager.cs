@@ -80,6 +80,13 @@ public class GameManager : MonoBehaviour
         mouseInputStatus = MouseInputState.Attack;
 
         gameState = GameState.Transiting;
+        
+        playerLevelManager = new PlayerLevelManager();
+        playerLevelManager.SetVitalityToLevel(1);
+        playerLevelManager.SetSkillToLevel(1);
+        playerLevelManager.SetStrengthToLevel(1);
+
+        coin = 1000;
     }
 
     void Start()
@@ -92,15 +99,11 @@ public class GameManager : MonoBehaviour
         levelText = GameObject.Find("PlayerLevelText").GetComponent<TextMeshProUGUI>();
         hintText = GameObject.Find("HintText").GetComponent<Text>();
         playerMenu = GameObject.Find("PlayerMenu");
-
-        playerLevelManager = new PlayerLevelManager();
-        playerLevelManager.SetVitalityToLevel(1);
-        playerLevelManager.SetSkillToLevel(1);
-        playerLevelManager.SetStrengthToLevel(1);
         
         UpdateCursorTexture();
         
-        IncrementCoinBy(1000);
+        // IncrementCoinBy(1000);
+        coinText.text = "Coin: " + coin;
     }
 
     void Update()

@@ -42,7 +42,7 @@ public class PowerRule {
     public long retrieveValueForLevel(int level)
     {
         if (level <= 0) return 1;
-        if (level > this.level) return levelToValueDict[level];
+        if (level > this.level) return levelToValueDict[this.level];
         return levelToValueDict[level];
     }
 

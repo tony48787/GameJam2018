@@ -11,6 +11,8 @@ public class PlayerLevelManager {
 
 	private GameManager gm;
 
+	private PowerRule powerRuleForLevelUpCost;
+
 	private PowerRule powerRuleForMaxHp;
 	private PowerRule powerRuleForMaxChargeBarValue;
 	private PowerRule powerRuleForChargeCoolDownDuration;
@@ -33,7 +35,9 @@ public class PlayerLevelManager {
 		playerLevel = 1;
 		vitality = 1;
 		skill = 1;
-		strength = 1;	
+		strength = 1;
+
+		powerRuleForLevelUpCost = new PowerRule(60, 100, 100000);
 
 		powerRuleForMaxHp = new PowerRule(20, 100, 2000);
 		powerRuleForMaxChargeBarValue = new PowerRule(20, 1000, 1600);
@@ -63,12 +67,19 @@ public class PlayerLevelManager {
 		SetStrengthToLevel(strength + level);
 	}
 
+	public long GetCoinToLevelUpToLevel(int level) {
+		return powerRuleForLevelUpCost.retrieveValueForLevel(level);
+	}
+
 	public void SetVitalityToLevel(int level) {
+		playerLevel += level - vitality;
 		vitality = level;
 		gm.playerStatus.maxHp = (float) powerRuleForMaxHp.retrieveValueForLevel(level);
+		gm.playerStatus.currentHp = gm.playerStatus.maxHp;
 	}
 
 	public void SetSkillToLevel(int level) {
+		playerLevel += level - skill;
 		skill = level;
 		gm.playerStatus.maxChargeBarValue = (float) powerRuleForMaxChargeBarValue.retrieveValueForLevel(level);
         gm.playerStatus.chargeCoolDownDuration = (float) powerRuleForChargeCoolDownDuration.retrieveValueForLevel(level) / 1000;
@@ -78,6 +89,7 @@ public class PlayerLevelManager {
 	}
 
 	public void SetStrengthToLevel(int level) {
+		playerLevel += level - strength;
 		strength = level;
 		gm.weaponStatus.bulletDamage = (float) powerRuleForBulletDamage.retrieveValueForLevel(level);
         gm.weaponStatus.bulletSpeed = (float) powerRuleForBulletSpeed.retrieveValueForLevel(level) / 100;

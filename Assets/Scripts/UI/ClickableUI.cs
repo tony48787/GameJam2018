@@ -22,22 +22,28 @@ public class ClickableUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-		isEnter = true;
-        gm.mouseInputStatus = MouseInputState.InteractUI;
-		gm.UpdateCursorTexture();
+		if (gm) {
+			isEnter = true;
+			gm.mouseInputStatus = MouseInputState.InteractUI;
+			gm.UpdateCursorTexture();
+		}
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-		isEnter = false;
-        gm.mouseInputStatus = MouseInputState.Attack;
-		gm.UpdateCursorTexture();
+		if (gm) {
+			isEnter = false;
+			gm.mouseInputStatus = MouseInputState.Attack;
+			gm.UpdateCursorTexture();
+		}
     }
 
 	private void OnDisable() {
 		// when the clickable UI is disabled, change cursor back to attack type
-		isEnter = false;
-        gm.mouseInputStatus = MouseInputState.Attack;
-		gm.UpdateCursorTexture();
+		if (gm) {
+			isEnter = false;
+			gm.mouseInputStatus = MouseInputState.Attack;
+			gm.UpdateCursorTexture();
+		}
 	}
 }

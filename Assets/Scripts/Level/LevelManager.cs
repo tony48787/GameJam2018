@@ -11,12 +11,15 @@ public class LevelManager : MonoBehaviour {
 
     private GameObject startWaveBtn;
     private GameObject levelUpBtn;
+    private GameObject levelUpMenu;
 
     // Use this for initialization
     void Start ()
     {
         startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
         levelUpBtn = GameObject.Find("LevelUpBtn").gameObject;
+        levelUpMenu = GameObject.Find("PlayerMenu").gameObject;
+        levelUpMenu.SetActive(false);
         CreateLevel();
     }
 
@@ -117,4 +120,17 @@ public class LevelManager : MonoBehaviour {
         }
         return tileMaps;
     }
+
+    public void OpenLevelUpMenu()
+    {
+        levelUpBtn.SetActive(false);
+        levelUpMenu.SetActive(true);
+    }
+
+    public void CloseLevelUpMenu()
+    {
+        levelUpMenu.SetActive(false);
+        levelUpBtn.SetActive(true);
+    }
+
 }
