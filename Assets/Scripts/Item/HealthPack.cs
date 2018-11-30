@@ -12,16 +12,15 @@ public class HealthPack : MonoBehaviour {
 	void Start () {
 		circleCollider2D = GetComponent<CircleCollider2D>();
         gm = GameManager.instance;
-        playerStatus = gm.playerStatus;
     }
 	
 	void OnTriggerEnter2D(Collider2D other) {
 		if (!other.isTrigger && other.CompareTag("Player")) {
-            playerStatus.currentHp += recoverHp;
-			if (playerStatus.currentHp >= playerStatus.maxHp) {
-                playerStatus.currentHp = playerStatus.maxHp;
+            gm.playerStatus.currentHp += recoverHp;
+			if (gm.playerStatus.currentHp >= gm.playerStatus.maxHp) {
+                gm.playerStatus.currentHp = gm.playerStatus.maxHp;
             }
-            Debug.Log("Current: " + playerStatus.currentHp);
+            Debug.Log("Current: " + gm.playerStatus.currentHp);
 			Destroy(gameObject);
 		}
 	}

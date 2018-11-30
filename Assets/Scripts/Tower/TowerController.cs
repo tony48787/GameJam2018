@@ -69,7 +69,8 @@ public class TowerController : MonoBehaviour {
 		towerType = GetComponent<TowerType>();
         towerLevelText = transform.parent.GetComponentInChildren<TextMeshProUGUI>();
         bulletTransform = GetComponentInChildren<Transform>();
-	}
+        isActive = true;
+    }
 	
 	// Update is called once per frame
 	void Update () {
