@@ -32,6 +32,8 @@ public class PrefabManager : MonoBehaviour {
 
     public Texture2D upgradeTowerCursorType;
 
+    public Texture2D pickerCursorType;
+
     public static PrefabManager instance = null;
 
     //Awake is always called before any Start functions

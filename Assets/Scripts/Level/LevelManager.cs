@@ -10,10 +10,16 @@ public class LevelManager : MonoBehaviour {
     private string[] tileMaps;
 
     private GameObject startWaveBtn;
+    private GameObject levelUpBtn;
+    private GameObject levelUpMenu;
 
     // Use this for initialization
     void Start ()
     {
+        startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
+        levelUpBtn = GameObject.Find("LevelUpBtn").gameObject;
+        levelUpMenu = GameObject.Find("PlayerMenu").gameObject;
+        levelUpMenu.SetActive(false);
         CreateLevel();
     }
 
@@ -62,23 +68,28 @@ public class LevelManager : MonoBehaviour {
     {
         gameObject.SendMessage("StartSpawn");
 
-        startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
         startWaveBtn.SetActive(false);
+        levelUpBtn.SetActive(false);
+
+        GameManager.instance.gameState = GameState.Playing;
     }
 
     public void EndWave()
     {
         startWaveBtn.SetActive(true);
+        levelUpBtn.SetActive(true);
 
         GameManager.instance.IncrementWaveBy();
+        GameManager.instance.gameState = GameState.Transiting;
     }
 
     public void DevpKillEnemy()
     {
-        GameObject go = GameObject.FindGameObjectWithTag("Enemy");
-        if (go)
-        {
-            go.GetComponent<EnemyController>().OnDespawn();
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies) {
+            if (enemy) {
+                enemy.GetComponent<EnemyController>().OnDespawn();
+            }
         }
     }
 
@@ -109,4 +120,17 @@ public class LevelManager : MonoBehaviour {
         }
         return tileMaps;
     }
+
+    public void OpenLevelUpMenu()
+    {
+        levelUpBtn.SetActive(false);
+        levelUpMenu.SetActive(true);
+    }
+
+    public void CloseLevelUpMenu()
+    {
+        levelUpMenu.SetActive(false);
+        levelUpBtn.SetActive(true);
+    }
+
 }

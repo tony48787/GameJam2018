@@ -5,14 +5,13 @@ using UnityEngine;
 public class AttackCollider : MonoBehaviour {
 
 	private GameManager gm;
-	private WeaponStatus status;
+	
 	public float damage = 10f;
 	public float repelForce = 10f;
 
 	// Use this for initialization
 	void Start () {
 		gm = GameManager.instance;
-		status = gm.weaponStatus;
 	}
 	
 	// Update is called once per frame
@@ -27,7 +26,7 @@ public class AttackCollider : MonoBehaviour {
 			Rigidbody2D otherRb2d = other.GetComponent<Rigidbody2D>();
 			Vector2 direction = otherRb2d.position - new Vector2 (transform.position.x, transform.position.y);
 			direction.Normalize();
-			DamageMessage msg = new DamageMessage(status.swordDamage, direction * status.swordRepelForce);
+			DamageMessage msg = new DamageMessage(gm.weaponStatus.swordDamage, direction * gm.weaponStatus.swordRepelForce);
 			otherRb2d.velocity = new Vector2(0, 0);
 			other.SendMessageUpwards("OnDamaged", msg, SendMessageOptions.DontRequireReceiver);
 			Debug.Log("Damage target");

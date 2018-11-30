@@ -14,6 +14,8 @@ public class TileScript : MonoBehaviour {
 
     private GameManager gm;
 
+    private TowerSpawner towerSpawner;
+    
     private TowerController towerController;
 
     private TowerType towerType;
@@ -21,6 +23,7 @@ public class TileScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         gm = GameManager.instance;
+        towerSpawner = FindObjectOfType<TowerSpawner>();
 	}
 	
 	// Update is called once per frame
@@ -38,11 +41,12 @@ public class TileScript : MonoBehaviour {
     private void OnMouseOver()
     {
         if (!isOccupied) {
-            gm.mouseInputStatus = MouseInputStatus.AddTower;
+            gm.mouseInputStatus = MouseInputState.AddTower;
             // TODO: get build cost
+            gm.ShowHintText("Coin needed: " + towerSpawner.GetTowerBuildCost());
         }
         else {
-            gm.mouseInputStatus = MouseInputStatus.UpgradeTower;
+            gm.mouseInputStatus = MouseInputState.UpgradeTower;
             // TODO: get upgrade cost
             gm.ShowHintText("Coin needed: " + towerController.GetUpgradeCost());
         }
@@ -50,7 +54,7 @@ public class TileScript : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             if(!isOccupied)
             {
-                tower = FindObjectOfType<TowerSpawner>().SpawnTower(transform);
+                tower = towerSpawner.SpawnTower(transform);
                 if (tower) {
                     towerController = tower.GetComponentInChildren<TowerController>();
                     towerType = tower.GetComponentInChildren<TowerType>();
@@ -69,7 +73,7 @@ public class TileScript : MonoBehaviour {
 
     private void OnMouseExit()
     {
-        gm.mouseInputStatus = MouseInputStatus.Attack;
+        gm.mouseInputStatus = MouseInputState.Attack;
         gm.HideHintText();
         gm.UpdateCursorTexture();
     }

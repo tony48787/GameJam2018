@@ -60,6 +60,10 @@ public struct WeaponStatus {
 	public float chargeSwordSpeed;
 }
 
-public enum MouseInputStatus {
+public enum MouseInputState {
 	Attack, AddTower, UpgradeTower, InteractUI
+}
+
+public enum GameState {
+	Playing, Pausing, Transiting
 }
