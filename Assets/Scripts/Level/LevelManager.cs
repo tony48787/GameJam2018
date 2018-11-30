@@ -21,6 +21,18 @@ public class LevelManager : MonoBehaviour {
         levelUpMenu = GameObject.Find("PlayerMenu").gameObject;
         levelUpMenu.SetActive(false);
         CreateLevel();
+        CreateHelpIcon();
+        SetBtnIsActive(false);
+    }
+
+    private void CreateHelpIcon()
+    {
+        Vector3 newPosition = new Vector3(
+                            UnityEngine.Random.Range(-GameManager.instance.horzExtent / 2, GameManager.instance.horzExtent / 2),
+                            UnityEngine.Random.Range(-GameManager.instance.vertExtent / 2, GameManager.instance.vertExtent / 2),
+                            0);
+
+        Instantiate(PrefabManager.instance.helpIcon, newPosition, Quaternion.identity).GetComponent<HelpIcon>().current = 0;
     }
 
     private void CreateLevel()
@@ -68,8 +80,7 @@ public class LevelManager : MonoBehaviour {
     {
         gameObject.SendMessage("StartSpawn");
 
-        startWaveBtn.SetActive(false);
-        levelUpBtn.SetActive(false);
+        SetBtnIsActive(false);
 
         GameManager.instance.gameState = GameState.Playing;
 
@@ -82,8 +93,7 @@ public class LevelManager : MonoBehaviour {
 
     public void EndWave()
     {
-        startWaveBtn.SetActive(true);
-        levelUpBtn.SetActive(true);
+        SetBtnIsActive(true);
 
         GameManager.instance.IncrementWaveBy();
         GameManager.instance.gameState = GameState.Transiting;
@@ -144,4 +154,9 @@ public class LevelManager : MonoBehaviour {
         levelUpBtn.SetActive(true);
     }
 
+    public void SetBtnIsActive(bool isActive)
+    {
+        startWaveBtn.SetActive(isActive);
+        levelUpBtn.SetActive(isActive);
+    }
 }
