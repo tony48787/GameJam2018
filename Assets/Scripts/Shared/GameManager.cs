@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI levelText;
     private Text hintText;
     private GameObject playerMenu;
+    private GameObject shootModeImageObj;
+    private Image shootModeImage;
+    private GameObject swordModeImageObj;
+    private Image swordModeImage;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -99,8 +103,13 @@ public class GameManager : MonoBehaviour
         levelText = GameObject.Find("PlayerLevelText").GetComponent<TextMeshProUGUI>();
         hintText = GameObject.Find("HintText").GetComponent<Text>();
         playerMenu = GameObject.Find("PlayerMenu");
+        shootModeImageObj = GameObject.Find("ShootModeImage");
+        swordModeImageObj = GameObject.Find("SwordModeImage");
+        shootModeImage = shootModeImageObj.GetComponent<Image>();
+        swordModeImage = swordModeImageObj.GetComponent<Image>();
         
         UpdateCursorTexture();
+        UpdateAttackTypeUI();
         
         // IncrementCoinBy(1000);
         coinText.text = "Coin: " + coin;
@@ -187,6 +196,33 @@ public class GameManager : MonoBehaviour
                 cursorType = PrefabManager.instance.pickerCursorType;
                 Cursor.SetCursor(cursorType, new Vector2(cursorType.width/3, 0), cursorMode);
                 break;
+        }
+    }
+
+    public void UpdateAttackTypeUI() {
+        switch (playerStatus.currentAttackType) {
+            case PlayerAttackType.Shoot: {
+                shootModeImageObj.transform.localScale = new Vector2(1, 1);
+                swordModeImageObj.transform.localScale = new Vector2(0.7f, 0.7f);
+                Color tmp = shootModeImage.color;
+                tmp.a = 1f;
+                shootModeImage.color = tmp;
+                tmp = swordModeImage.color;
+                tmp.a = 0.7f;
+                swordModeImage.color = tmp;
+                break;
+            }
+            case PlayerAttackType.Slice: {
+                swordModeImageObj.transform.localScale = new Vector2(1, 1);
+                shootModeImageObj.transform.localScale = new Vector2(0.7f, 0.7f);
+                Color tmp = shootModeImage.color;
+                tmp.a = 0.7f;
+                shootModeImage.color = tmp;
+                tmp = swordModeImage.color;
+                tmp.a = 1f;
+                swordModeImage.color = tmp;
+                break;
+            }
         }
     }
 

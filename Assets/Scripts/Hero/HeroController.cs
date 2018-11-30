@@ -116,14 +116,20 @@ public class HeroController : MonoBehaviour {
 		}
 		holdingAttack = false;
 		holdingShoot = false;
+		gm.UpdateAttackTypeUI();
 	}
 
 	void HandleShoot() {
-		if (Input.GetKeyDown("mouse 0") && gm.playerStatus.currentAttackType == PlayerAttackType.Shoot) {
-			holdingShoot = true;
-		}
-		if (Input.GetKeyUp("mouse 0")) {
+		if (gm.gameState != GameState.Playing) {
 			holdingShoot = false;
+		}
+		else {
+			if (Input.GetKeyDown("mouse 0") && gm.playerStatus.currentAttackType == PlayerAttackType.Shoot) {
+				holdingShoot = true;
+			}
+			if (Input.GetKeyUp("mouse 0")) {
+				holdingShoot = false;
+			}
 		}
 		if (holdingShoot && !holdingCharge) {
 			animator.SetBool("IsShooting", true);
@@ -145,13 +151,18 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void HandleAttack() {
-		if (Input.GetKeyDown("mouse 0") && gm.playerStatus.currentAttackType == PlayerAttackType.Slice) {
-			// pressed attack key
-			holdingAttack = true;
-		}
-		if (Input.GetKeyUp("mouse 0")) {
-			// released attack key
+		if (gm.gameState != GameState.Playing) {
 			holdingAttack = false;
+		}
+		else {
+			if (Input.GetKeyDown("mouse 0") && gm.playerStatus.currentAttackType == PlayerAttackType.Slice) {
+				// pressed attack key
+				holdingAttack = true;
+			}
+			if (Input.GetKeyUp("mouse 0")) {
+				// released attack key
+				holdingAttack = false;
+			}
 		}
 		if (!attacking) {
 			// not playing attack animation, set trigger box for attack
@@ -180,13 +191,17 @@ public class HeroController : MonoBehaviour {
 	}
 
 	void HandleChargeSkill() {
-		if (Input.GetKeyDown("mouse 1")) {
-			holdingCharge = true;
-		}
-		if (Input.GetKeyUp("mouse 1")) {
+		if (gm.gameState != GameState.Playing) {
 			holdingCharge = false;
 		}
-
+		else {
+			if (Input.GetKeyDown("mouse 1")) {
+				holdingCharge = true;
+			}
+			if (Input.GetKeyUp("mouse 1")) {
+				holdingCharge = false;
+			}
+		}
 		// cool down time after charge attack
 		if (chargeCoolDownCountdown > 0) {
 			chargeCoolDownCountdown -= Time.deltaTime;
