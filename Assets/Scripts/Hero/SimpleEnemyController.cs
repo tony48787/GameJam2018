@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,6 +50,8 @@ public class SimpleEnemyController : MonoBehaviour {
 
         if (hp <= 0)
         {
+            SpawnHealthPack();
+
             GameManager.instance.IncrementCoinBy(coinDrop);
             FindObjectOfType<EnemySpawner>().UpdateCurrentCountBy();
             Destroy(gameObject);
@@ -57,7 +60,16 @@ public class SimpleEnemyController : MonoBehaviour {
         
     }
 
-	void OnCollisionEnter2D(Collision2D other) {
+    private void SpawnHealthPack()
+    {
+        int percentage = 5;
+        if (UnityEngine.Random.Range(0, 100) >= 100 - percentage)
+        {
+            GameObject healthPack = Instantiate(PrefabManager.instance.healthPackType, transform.position, Quaternion.identity);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other) {
 		if (other.collider.CompareTag("Player")) {
 			Debug.Log("Enemy attacks player");
 			// repel player from this collider

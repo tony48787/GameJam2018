@@ -20,16 +20,100 @@ public class TileScript : MonoBehaviour {
 
     private TowerType towerType;
 
+    private TowerOwner owner;
+
+    private float enemyTowerProgress;
+
+    private HealthBar progressBar;
+
 	// Use this for initialization
 	void Start () {
         gm = GameManager.instance;
         towerSpawner = FindObjectOfType<TowerSpawner>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	void FixedUpdate() {
+        EnemyTarget enemyTarget = GetComponent<EnemyTarget>();
+        if(enemyTarget)
+        {
+            //Attach progress bar
+            if(!progressBar)
+            {
+                GameObject go = Instantiate(PrefabManager.instance.progressBarType, transform.position, Quaternion.identity);
+                go.transform.Translate(new Vector3(0.3f, +0.5f));
+                progressBar = go.GetComponent<HealthBar>();
+            }
+
+            //Detect if any enemy in range
+            GameObject[] enemies = EnemiesInRange();
+
+            if (enemies.Length > 0)
+            {
+                enemyTowerProgress += enemies.Length / 5f;
+                progressBar.SetHealthRatio(enemyTowerProgress / 100f);
+                if (enemyTowerProgress >= 100f)
+                {
+                    if (towerController == null)
+                    {
+                        tower = FindObjectOfType<TowerSpawner>().InitTower(transform);
+                        towerController = tower.GetComponentInChildren<TowerController>();
+                        towerType = tower.GetComponentInChildren<TowerType>();
+                        isOccupied = true;
+                        towerController.UpdateOwnerToEnemy();
+                    } else if (towerController.owner != TowerOwner.ENEMY)
+                    {
+                        towerController.UpdateOwnerToEnemy();
+                    } else  if (towerController.owner == TowerOwner.ENEMY)
+                    {
+                        towerController.UpgradeTower();
+                    }
+
+                    Destroy(progressBar.gameObject);
+                    progressBar = null;
+                    enemyTowerProgress = 0f;
+                }
+            }
+        } else
+        {
+            enemyTowerProgress = 0f;
+            if (progressBar)
+            {
+                Destroy(progressBar.gameObject);
+                progressBar = null;
+            }
+        }
 	}
+
+    GameObject[] EnemiesInRange()
+    {
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("Enemy");
+
+        List<GameObject> result = new List<GameObject>();
+        Vector3 position = transform.position;
+        foreach (GameObject go in gos)
+        {
+            if(EnemyInRange(go))
+            {
+                result.Add(go);
+            }
+        }
+        return result.ToArray();
+    }
+
+    bool EnemyInRange(GameObject enemy)
+    {
+        if (enemy)
+        {
+            float dist = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
+            return dist < GameManager.instance.horzExtent / 4;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
 
     public void Init(Point p, int tileType)
     {
@@ -60,12 +144,14 @@ public class TileScript : MonoBehaviour {
                     towerType = tower.GetComponentInChildren<TowerType>();
                     isOccupied = true;
                     gm.ShowHintText("Coin needed: " + towerType.buildCost);
+
+                    towerController.owner = TowerOwner.HERO;
                 }
             } else
             {
                 //Todo
                 Debug.Log("Show UI");
-                towerController.UpgradeTower();
+                towerController.UpgradeTowerByCoin();
                 gm.ShowHintText("Coin needed: " + towerType.buildCost);
             }
         } 
@@ -78,3 +164,4 @@ public class TileScript : MonoBehaviour {
         gm.UpdateCursorTexture();
     }
 }
+

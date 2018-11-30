@@ -57,9 +57,13 @@ MonoBehaviour:
     type: 2}
   chargeBarType: {fileID: 1272771115096318, guid: 3b1f63518fc38784e89924ce17f9cf58,
     type: 2}
+  progressBarType: {fileID: 1435634140677416, guid: 613718a4a543a9e44b105085ef8b2690,
+    type: 2}
   tile: {fileID: 1250277887762332, guid: ad380e6376b057d4e83e75e7af59a3f7, type: 2}
-  tower: {fileID: 1907708781081872, guid: ede66f440f6ae7c4cafb0bb5b86c9337, type: 2}
+  tower: {fileID: 1596369602065810, guid: 0fe30843fafc3f84a87970a7f5f194e1, type: 2}
   enemy: {fileID: 1487217089357432, guid: 96dfb1a7bc443c24ebc0aff9d0957db9, type: 2}
+  enemy_tower_builder: {fileID: 1561690134144274, guid: 4e49b75b3d64ace4590a19e54f0e8e2e,
+    type: 2}
   player: {fileID: 1075108965482662, guid: 6025179efcf017042883017d1373542d, type: 2}
   bulletType: {fileID: 1151943239449746, guid: 719823623a196174fba774932b3a9679, type: 2}
   explosiveBulletType: {fileID: 1505990854141004, guid: 48ede3a2de52c1e4d907a932af5bafc9,
@@ -73,3 +77,4 @@ MonoBehaviour:
   upgradeTowerCursorType: {fileID: 2800000, guid: 4f9c5c5c2c1aa174cb354a7bbc1e4c44,
     type: 3}
   pickerCursorType: {fileID: 2800000, guid: ef4408fd8f335e8419e4cca4731babf2, type: 3}
+  helpIcon: {fileID: 1300602908505230, guid: f5a74e55ddc8cb9439a9f90d2162c95a, type: 2}

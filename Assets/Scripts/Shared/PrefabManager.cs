@@ -10,11 +10,15 @@ public class PrefabManager : MonoBehaviour {
 
     public GameObject chargeBarType;
 
+    public GameObject progressBarType;
+
     public GameObject tile;
 
     public GameObject tower;
 
     public GameObject enemy;
+
+    public GameObject enemy_tower_builder;
 
     public GameObject player;
 
@@ -33,6 +37,8 @@ public class PrefabManager : MonoBehaviour {
     public Texture2D upgradeTowerCursorType;
 
     public Texture2D pickerCursorType;
+
+    public GameObject helpIcon;
 
     public static PrefabManager instance = null;
 
