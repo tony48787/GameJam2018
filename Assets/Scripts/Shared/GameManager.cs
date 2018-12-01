@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
         mainCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         waveText = GameObject.Find("WaveText").GetComponent<TextMeshProUGUI>();
         coinText = GameObject.Find("CoinText").GetComponent<TextMeshProUGUI>();
-        levelText = GameObject.Find("PlayerLevelText").GetComponent<TextMeshProUGUI>();
+        levelText = GameObject.Find("LevelText").GetComponent<TextMeshProUGUI>();
         hintText = GameObject.Find("HintText").GetComponent<Text>();
         playerMenu = GameObject.Find("PlayerMenu");
         shootModeImageObj = GameObject.Find("ShootModeImage");
@@ -169,6 +169,11 @@ public class GameManager : MonoBehaviour
         coin += delta;
 
         coinText.text = "Coin: " + coin;
+    }
+
+    public void SetPlayerLevelText(int level)
+    {
+        levelText.text = "Level: " + level;
     }
 
     // do state checking inside method

@@ -202,6 +202,46 @@ public class HeroController : MonoBehaviour {
 				holdingCharge = false;
 			}
 		}
+
+		canChargeAttack = (gm.playerStatus.currentChargeBarValue >= gm.playerStatus.maxChargeBarValue);
+
+		// handle charge attack skill
+		if (Input.GetKeyUp("mouse 1") && canChargeAttack) {
+			if (gm.playerStatus.currentAttackType == PlayerAttackType.Shoot) {
+				Debug.Log("Do Charge Shoot!");
+				// TODO: handle charge shoot
+				animator.Play("HeroChargeShoot");
+				GameObject explosiveBullet = Instantiate(pm.explosiveBulletType,
+					firePosition.position, firePosition.rotation);
+			}
+			else if (gm.playerStatus.currentAttackType == PlayerAttackType.Slice) {
+				Debug.Log("Do Charge Slice!");
+				// TODO: handle charge slice
+				// spawn sword wind
+				animator.Play("HeroChargeFight");
+				GameObject swordWind = Instantiate(pm.swordWindType,
+					transform.position, transform.rotation);
+			}
+			gm.playerStatus.currentChargeBarValue = 0;
+			canChargeAttack = false;
+			chargeCoolDownCountdown = gm.playerStatus.chargeCoolDownDuration;
+			Debug.Log("chargeCoolDownDuration: " + gm.playerStatus.chargeCoolDownDuration);
+		}
+
+		if (holdingCharge) {
+			if (chargeCoolDownCountdown > 0) {
+				chargeBar.ActivateCoolDownText(true);
+			}
+			else {
+				chargeBar.ActivateCoolDownText(false);
+				animator.SetBool("IsCharging", true);
+			}
+		}
+		else {
+			chargeBar.ActivateCoolDownText(false);
+			animator.SetBool("IsCharging", false);
+		}
+
 		// cool down time after charge attack
 		if (chargeCoolDownCountdown > 0) {
 			chargeCoolDownCountdown -= Time.deltaTime;
@@ -224,30 +264,6 @@ public class HeroController : MonoBehaviour {
 					gm.playerStatus.currentChargeBarValue = 0;
 				}
 			}
-		}
-		canChargeAttack = (gm.playerStatus.currentChargeBarValue >= gm.playerStatus.maxChargeBarValue);
-
-		// handle charge attack skill
-		if (Input.GetKey("mouse 0") && canChargeAttack) {
-			if (gm.playerStatus.currentAttackType == PlayerAttackType.Shoot) {
-				Debug.Log("Do Charge Shoot!");
-				// TODO: handle charge shoot
-				animator.Play("HeroChargeShoot");
-				GameObject explosiveBullet = Instantiate(pm.explosiveBulletType,
-					firePosition.position, firePosition.rotation);
-			}
-			else if (gm.playerStatus.currentAttackType == PlayerAttackType.Slice) {
-				Debug.Log("Do Charge Slice!");
-				// TODO: handle charge slice
-				// spawn sword wind
-				animator.Play("HeroChargeFight");
-				GameObject swordWind = Instantiate(pm.swordWindType,
-					transform.position, transform.rotation);
-			}
-			gm.playerStatus.currentChargeBarValue = 0;
-			canChargeAttack = false;
-			chargeCoolDownCountdown = gm.playerStatus.chargeCoolDownDuration;
-			Debug.Log("chargeCoolDownDuration: " + gm.playerStatus.chargeCoolDownDuration);
 		}
 	}
 
