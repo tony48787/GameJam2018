@@ -79,7 +79,7 @@ public class EnemyController : MonoBehaviour
     IEnumerator WaitAndCharge()
     {
         chargeCompleted = false;
-        float force = baseForce * UnityEngine.Random.Range(1, GameManager.instance.wave);
+        float force = baseForce * UnityEngine.Random.Range(1, 4);
         rb2d.Sleep();
         yield return new WaitForSeconds(0.3f);
 

@@ -34,11 +34,9 @@ public class DialogController : MonoBehaviour {
         textComponent = GetComponentInChildren<TextMeshProUGUI>();
         spawnLocations = new Vector3[]
         {
-            new Vector3(-GameManager.instance.horzExtent / 2, 0, 0),
             new Vector3(-GameManager.instance.horzExtent / 4, 0, 0),
             new Vector3(0, 0, 0),
             new Vector3(GameManager.instance.horzExtent / 4, 0, 0),
-            new Vector3(GameManager.instance.horzExtent / 2, 0, 0),
         };
     }
 	

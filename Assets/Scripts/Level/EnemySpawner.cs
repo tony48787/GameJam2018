@@ -23,11 +23,13 @@ public class EnemySpawner : MonoBehaviour {
     private PowerRule powerRuleForEnemyBuilderNumbers;
     private PowerRule powerRuleForEnemyMaxHp;
     private PowerRule powerRuleForEnemyCoinDrop;
-    private PowerRule powerRuleForEnemyForce; 
+    private PowerRule powerRuleForEnemyForce;
+    private PowerRule powerRuleForEnemySpeed;
 
     private PowerRule powerRuleForMiniBossMaxHp;
     private PowerRule powerRuleForMiniBossCoinDrop;
     private PowerRule powerRuleForMiniBossForce;
+    private PowerRule powerRuleForMiniBossSpeed;
 
     private bool isMiniBossSpawned;
 
@@ -41,11 +43,13 @@ public class EnemySpawner : MonoBehaviour {
         powerRuleForEnemyBuilderNumbers = new PowerRule(30, 1, 15);
         powerRuleForEnemyMaxHp = new PowerRule(20, 20, 2000);
         powerRuleForEnemyCoinDrop = new PowerRule(20, 5, 30);
-        powerRuleForEnemyForce = new PowerRule(20, 200, 1200);
+        powerRuleForEnemyForce = new PowerRule(20, 200, 600);
+        powerRuleForEnemySpeed = new PowerRule(50, 1, 7);
 
         powerRuleForMiniBossMaxHp = new PowerRule(20, 100, 200000);
         powerRuleForMiniBossCoinDrop = new PowerRule(20, 20, 1000);
-        powerRuleForMiniBossForce = new PowerRule(20, 400, 2400);
+        powerRuleForMiniBossForce = new PowerRule(20, 400, 1200);
+        powerRuleForMiniBossSpeed = new PowerRule(50, 2, 14);
     }
 
     void StartSpawn()
@@ -96,6 +100,7 @@ public class EnemySpawner : MonoBehaviour {
         newEnemy.GetComponent<SimpleEnemyController>().coinDrop = (int) powerRuleForEnemyCoinDrop.retrieveValueForLevel(GameManager.instance.wave);
 
         newEnemy.GetComponent<EnemyController>().baseForce = powerRuleForEnemyForce.retrieveValueForLevel(GameManager.instance.wave);
+        newEnemy.GetComponent<EnemyController>().Speed = powerRuleForEnemySpeed.retrieveValueForLevel(GameManager.instance.wave);
         return newEnemy;
     }
 
@@ -139,5 +144,6 @@ public class EnemySpawner : MonoBehaviour {
 
         newEnemy.GetComponent<EnemyController>().baseCoolDownTime = newEnemy.GetComponent<EnemyController>().baseCoolDownTime / 2f;
         newEnemy.GetComponent<EnemyController>().baseForce = powerRuleForMiniBossForce.retrieveValueForLevel(GameManager.instance.wave);
+        newEnemy.GetComponent<EnemyController>().Speed = powerRuleForMiniBossSpeed.retrieveValueForLevel(GameManager.instance.wave);
     }
 }
