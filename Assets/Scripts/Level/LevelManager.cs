@@ -80,11 +80,6 @@ public class LevelManager : MonoBehaviour {
 
         GameManager.instance.gameState = GameState.Playing;
 
-        foreach (TowerController tower in FindObjectsOfType<TowerController>())
-        {
-            tower.isActive = false;
-        }
-
     }
 
     public void EndWave()
@@ -93,11 +88,6 @@ public class LevelManager : MonoBehaviour {
 
         GameManager.instance.IncrementWaveBy();
         GameManager.instance.gameState = GameState.Transiting;
-
-        foreach (TowerController tower in FindObjectsOfType<TowerController>())
-        {
-            tower.isActive = false;
-        }
     }
 
     public void DevpKillEnemy()
