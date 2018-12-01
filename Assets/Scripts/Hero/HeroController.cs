@@ -43,6 +43,7 @@ public class HeroController : MonoBehaviour {
 	private bool isTransparent = false;
 	private float spriteBlinkDuration = 0.2f;
 	private float spriteBlinkCountdown = 0f;
+    private AudioSource audioSource;
 
 	// Use this for initialization
 	void Start () {
@@ -61,7 +62,10 @@ public class HeroController : MonoBehaviour {
 		chargeBar = GameObject.Find("ChargeBar").GetComponent<ChargeBar>();
 		UpdateHealthBar();
 		UpdateChargeBar();
-	}
+
+        audioSource = GetComponent<AudioSource>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -148,7 +152,8 @@ public class HeroController : MonoBehaviour {
 
 	void FireBullet() {
 		GameObject bullet = Instantiate(PrefabManager.instance.bulletType, firePosition.position, firePosition.rotation);
-	}
+        audioSource.Play();
+    }
 
 	void HandleAttack() {
 		if (gm.gameState != GameState.Playing) {
@@ -221,6 +226,7 @@ public class HeroController : MonoBehaviour {
 				animator.Play("HeroChargeFight");
 				GameObject swordWind = Instantiate(pm.swordWindType,
 					transform.position, transform.rotation);
+                audioSource.Play();
 			}
 			gm.playerStatus.currentChargeBarValue = 0;
 			canChargeAttack = false;
