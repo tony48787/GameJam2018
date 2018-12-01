@@ -37,21 +37,21 @@ public class PlayerLevelManager {
 		skill = 1;
 		strength = 1;
 
-		powerRuleForLevelUpCost = new PowerRule(60, 100, 100000);
+		powerRuleForLevelUpCost = new PowerRule(300, 100, 800000);
 
-		powerRuleForMaxHp = new PowerRule(20, 100, 2000);
+		powerRuleForMaxHp = new PowerRule(100, 100, 2000);
 		powerRuleForMaxChargeBarValue = new PowerRule(20, 1000, 1600);
 		powerRuleForChargeCoolDownDuration = new PowerRule(20, 3000, 1000);		// div 1000
 		powerRuleForChargeBarIncreaseRate = new PowerRule(20, 5000, 15000);		// div 1000
 		powerRuleForChargeBarDecreaseRate = new PowerRule(20, 10000, 12000);	// div 1000
 		powerRuleForShootCoolDownDuration = new PowerRule(20, 200, 80);			// div 1000
-		powerRuleForBulletDamage = new PowerRule(20, 10, 200);
+		powerRuleForBulletDamage = new PowerRule(100, 10, 1000);
 		powerRuleForBulletSpeed = new PowerRule(20, 1500, 3000);				// div 100
-		powerRuleForSwordDamage = new PowerRule(20, 10, 200);
-		powerRuleForSwordRepelForce = new PowerRule(20, 10, 40);
-		powerRuleForChargeBulletDamage = new PowerRule(20, 50, 6000);
+		powerRuleForSwordDamage = new PowerRule(100, 10, 1200);
+		powerRuleForSwordRepelForce = new PowerRule(20, 10, 30);
+		powerRuleForChargeBulletDamage = new PowerRule(100, 100, 8000);
 		powerRuleForChargeBulletSpeed = new PowerRule(20, 1000, 2000);			// div 100
-		powerRuleForChargeSwordDamage = new PowerRule(20, 100, 10000);
+		powerRuleForChargeSwordDamage = new PowerRule(100, 100, 6500);
 		powerRuleForChargeSwordSpeed = new PowerRule(20, 300, 1000);			// div 100
 	}
 

@@ -30,6 +30,8 @@ public class PrefabManager : MonoBehaviour {
 
     public GameObject healthPackType;
 
+    public GameObject explosionType;
+
     public Texture2D crosshairCursorType;
 
     public Texture2D addTowerCursorType;

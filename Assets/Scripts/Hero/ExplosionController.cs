@@ -19,7 +19,10 @@ public class ExplosionController : MonoBehaviour {
 		pointEffector2D = GetComponent<PointEffector2D>();
 		pointEffector2D.forceMagnitude = forceMagnitude;
 		pointEffector2D.forceVariation = forceVariation;
-	}
+
+        GetComponent<AudioSource>().Play();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {

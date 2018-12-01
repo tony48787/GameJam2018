@@ -12,6 +12,6 @@ public class TowerType : MonoBehaviour {
     void Start () {
         powerRuleForUpgradeCost = new PowerRule(50, buildCost, buildCost * buildCost);
         long damage = (long) baseDamage;
-        powerRuleForDamage = new PowerRule(50, damage, damage * damage);
+        powerRuleForDamage = new PowerRule(50, 10, 900);
     }
 }

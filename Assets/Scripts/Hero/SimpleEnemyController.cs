@@ -13,7 +13,7 @@ public class SimpleEnemyController : MonoBehaviour {
 	public float repelForce = 70f;
 	private Rigidbody2D rb2d;
 	public HealthBar healthBarType;
-	private HealthBar healthBar;
+	public HealthBar healthBar;
 
     public int coinDrop = 10;
 

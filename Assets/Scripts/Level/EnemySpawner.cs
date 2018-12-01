@@ -39,17 +39,17 @@ public class EnemySpawner : MonoBehaviour {
     void Start () {
         vertExtent = GameManager.instance.vertExtent;
         horzExtent = GameManager.instance.horzExtent;
-        powerRuleForEnemyNumbers = new PowerRule(30, 1, 100);
+        powerRuleForEnemyNumbers = new PowerRule(50, 1, 50);
         powerRuleForEnemyBuilderNumbers = new PowerRule(30, 1, 15);
-        powerRuleForEnemyMaxHp = new PowerRule(20, 20, 2000);
-        powerRuleForEnemyCoinDrop = new PowerRule(20, 5, 30);
+        powerRuleForEnemyMaxHp = new PowerRule(100, 20, 9000);
+        powerRuleForEnemyCoinDrop = new PowerRule(50, 10, 300);
         powerRuleForEnemyForce = new PowerRule(20, 200, 600);
-        powerRuleForEnemySpeed = new PowerRule(50, 1, 7);
+        powerRuleForEnemySpeed = new PowerRule(50, 1, 3);
 
-        powerRuleForMiniBossMaxHp = new PowerRule(20, 100, 200000);
-        powerRuleForMiniBossCoinDrop = new PowerRule(20, 20, 1000);
+        powerRuleForMiniBossMaxHp = new PowerRule(100, 300, 75000);
+        powerRuleForMiniBossCoinDrop = new PowerRule(50, 200, 20000);
         powerRuleForMiniBossForce = new PowerRule(20, 400, 1200);
-        powerRuleForMiniBossSpeed = new PowerRule(50, 2, 14);
+        powerRuleForMiniBossSpeed = new PowerRule(50, 1, 4);
     }
 
     void StartSpawn()
@@ -104,9 +104,21 @@ public class EnemySpawner : MonoBehaviour {
         return newEnemy;
     }
 
-    void EndSpawn()
+    public void EndSpawn()
     {
+
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            if (enemy)
+            {
+                Destroy(enemy);
+            }
+        }
+
         gameObject.SendMessage("EndWave");
+
+
 
         UnmarkTileAsTarget();
     }

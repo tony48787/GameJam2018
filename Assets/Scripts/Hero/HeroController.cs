@@ -61,7 +61,8 @@ public class HeroController : MonoBehaviour {
 		chargeBar = GameObject.Find("ChargeBar").GetComponent<ChargeBar>();
 		UpdateHealthBar();
 		UpdateChargeBar();
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -148,7 +149,7 @@ public class HeroController : MonoBehaviour {
 
 	void FireBullet() {
 		GameObject bullet = Instantiate(PrefabManager.instance.bulletType, firePosition.position, firePosition.rotation);
-	}
+    }
 
 	void HandleAttack() {
 		if (gm.gameState != GameState.Playing) {
@@ -297,6 +298,16 @@ public class HeroController : MonoBehaviour {
 			// repel from enemy
 			rb2d.velocity = new Vector2(0f, 0f);
 			rb2d.AddForce(repelForce, ForceMode2D.Impulse);
+		}
+
+		if (gm.playerStatus.currentHp <= 0) {
+			Instantiate(pm.explosionType, transform.position, transform.rotation);
+			LevelManager lm = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+			lm.EnableRestartBtn();
+			transform.position = new Vector2(0, 0);
+			transform.rotation = new Quaternion(0, 0, 0, 0);
+			lm.DevpKillEnemy();
+			lm.SetBtnIsActive(false);
 		}
 	}
 	

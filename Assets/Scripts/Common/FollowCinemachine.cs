@@ -21,7 +21,7 @@ public class FollowCinemachine : MonoBehaviour {
 	void Update () {
 		if (!hasFollowObject) {
 			cvCamera.Follow = GameObject.FindGameObjectWithTag("Player").transform;
-			hasFollowObject = false;
+			hasFollowObject = true;
 		}
 	}
 }

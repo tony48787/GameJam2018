@@ -22,7 +22,9 @@ public class BulletController : MonoBehaviour {
 
 		bulletBody = GetComponent<Rigidbody2D>();
 		bulletBody.velocity = bulletBody.transform.up * status.bulletSpeed;
-	}
+
+        GetComponent<AudioSource>().Play();
+    }
 	
 	// Update is called once per frame
 	void Update () {
