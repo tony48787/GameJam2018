@@ -39,6 +39,8 @@ public class HealthBar : MonoBehaviour {
 	}
 
 	public void SetHealthRatio(float hpRatio) {
+		if (hpRatio > 1f) hpRatio = 1f;
+		else if (hpRatio < 0) hpRatio = 0;
 		this.hpRatio = hpRatio;
 	}
 }

@@ -173,5 +173,7 @@ public class LevelUpMenuController : MonoBehaviour {
 		gm.playerLevelManager.SetSkillToLevel(skill);
 		gm.playerLevelManager.SetStrengthToLevel(strength);
 		gm.coin = playerCoin;
+		gm.IncrementCoinBy(-(gm.coin - playerCoin));
+		gm.SetPlayerLevelText(playerLevel);
 	}
 }
