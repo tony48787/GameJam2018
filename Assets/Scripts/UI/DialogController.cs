@@ -17,6 +17,8 @@ public class DialogController : MonoBehaviour {
         "Have fun!"
     };
 
+    private Vector3[] spawnLocations;
+
     private float width = 200f;
 
     private float height = 100f;
@@ -29,6 +31,14 @@ public class DialogController : MonoBehaviour {
     void Start () {
         imageComponent = GetComponent<Image>();
         textComponent = GetComponentInChildren<TextMeshProUGUI>();
+        spawnLocations = new Vector3[]
+        {
+            new Vector3(-GameManager.instance.horzExtent / 2, 0, 0),
+            new Vector3(-GameManager.instance.horzExtent / 4, 0, 0),
+            new Vector3(0, 0, 0),
+            new Vector3(GameManager.instance.horzExtent / 4, 0, 0),
+            new Vector3(GameManager.instance.horzExtent / 2, 0, 0),
+        };
     }
 	
 	// Update is called once per frame
@@ -50,10 +60,7 @@ public class DialogController : MonoBehaviour {
             textComponent.enabled = true;
             textComponent.text = dialogs[index];
 
-            Vector3 newPosition = new Vector3(
-                    Random.Range(-GameManager.instance.horzExtent / 2, GameManager.instance.horzExtent / 2),
-                    Random.Range(-GameManager.instance.vertExtent / 2, GameManager.instance.vertExtent / 2),
-                    0);
+            Vector3 newPosition = spawnLocations[index % spawnLocations.Length];
 
             GameObject gm = Instantiate(PrefabManager.instance.helpIcon, newPosition, Quaternion.identity);
             gm.GetComponent<HelpIcon>().current = index + 1;
