@@ -32,16 +32,15 @@ public class HealthBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Mathf.Abs(currentHpRatio - hpRatio) > 0.01) {
-			currentHpRatio = Mathf.Lerp(currentHpRatio, hpRatio, lerpRate);
-			if (currentHpRatio < 0) {
-				currentHpRatio = 0;
-			}
+		if (currentHpRatio != hpRatio) {
+			currentHpRatio = hpRatio;
 			bar.localScale = new Vector3(currentHpRatio, 1f);
 		}
 	}
 
 	public void SetHealthRatio(float hpRatio) {
+		if (hpRatio > 1f) hpRatio = 1f;
+		else if (hpRatio < 0) hpRatio = 0;
 		this.hpRatio = hpRatio;
 	}
 }

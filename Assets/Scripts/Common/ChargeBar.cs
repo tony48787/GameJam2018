@@ -9,6 +9,7 @@ public class ChargeBar : MonoBehaviour {
 	private SpriteRenderer barSpriteRenderer;
 	private Transform border;
 	private Transform background;
+	private Transform coolDownText;
 	public float width = 100f;
 	public float height = 10f;
 	public float borderSize = 2f;
@@ -23,22 +24,21 @@ public class ChargeBar : MonoBehaviour {
 		barSpriteRenderer = barSprite.GetComponent<SpriteRenderer>();
 		border = transform.Find("Border");
 		background = transform.Find("Background");
+		coolDownText = transform.Find("Cool_Down_Text");
 		border.localScale = new Vector3(width+borderSize*2, height+borderSize*2);
 		barSprite.localScale = new Vector3(width, height);
 		background.localScale = new Vector3(width, height);
 		bar.localPosition = new Vector3(bar.localPosition.x*width/100f, 0);
 		barSprite.localPosition = new Vector3(barSprite.localPosition.x*width/100f, 0);
+		ActivateCoolDownText(false);
 
 		currentChargeRatio = chargeRatio;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Mathf.Abs(currentChargeRatio - chargeRatio) > 0.01) {
-			currentChargeRatio = Mathf.Lerp(currentChargeRatio, chargeRatio, lerpRate);
-			if (currentChargeRatio < 0) {
-				currentChargeRatio = 0;
-			}
+		if (currentChargeRatio != chargeRatio) {
+			currentChargeRatio = chargeRatio;
 			bar.localScale = new Vector3(currentChargeRatio, 1f);
 			ChangeBarColor();
 		}
@@ -56,6 +56,12 @@ public class ChargeBar : MonoBehaviour {
 	}
 
 	public void SetChargeRatio(float chargeRatio) {
+		if (chargeRatio > 1f) chargeRatio = 1f;
+		else if (chargeRatio < 0) chargeRatio = 0;
 		this.chargeRatio = chargeRatio;
+	}
+
+	public void ActivateCoolDownText(bool active) {
+		coolDownText.gameObject.SetActive(active);
 	}
 }

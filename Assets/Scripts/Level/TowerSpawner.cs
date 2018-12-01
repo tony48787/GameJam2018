@@ -18,13 +18,11 @@ public class TowerSpawner : MonoBehaviour {
             long buildCost = FetchTowerBuildCost();
             if (GameManager.instance.coin >= buildCost)
             {
-                GameObject tower = Instantiate(selectedTowerPrefab, spawnTransform.position, Quaternion.identity);
-                tower.transform.Translate(new Vector3(0.3f, -0.25f));
-
-                GameManager.instance.IncrementCoinBy(-tower.GetComponent<TowerType>().buildCost);
+                GameObject tower = InitTower(spawnTransform);
 
                 return tower;
-            } else
+            }
+            else
             {
                 Debug.Log("Not enough money");
             }
@@ -35,13 +33,37 @@ public class TowerSpawner : MonoBehaviour {
         return null;
     }
 
+    public GameObject InitTower(Transform spawnTransform)
+    {
+        GameObject tower = Instantiate(selectedTowerPrefab, spawnTransform.position, Quaternion.identity);
+        tower.transform.Translate(new Vector3(0.3f, -0.25f));
+
+        GameManager.instance.IncrementCoinBy(-tower.GetComponentInChildren<TowerType>().buildCost);
+        return tower;
+    }
+
     public void SetTower(GameObject towerPrefab)
     {
         selectedTowerPrefab = towerPrefab;
     }
 
+    public long GetTowerBuildCost()
+    {
+        return FetchTowerBuildCost();
+    }
+
+    public bool CheckCanBuildTower()
+    {
+        long buildCost = FetchTowerBuildCost();
+        if (GameManager.instance.coin >= buildCost)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private long FetchTowerBuildCost()
     {
-        return selectedTowerPrefab.GetComponent<TowerType>().buildCost;
+        return selectedTowerPrefab.GetComponentInChildren<TowerType>().buildCost;
     }
 }

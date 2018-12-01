@@ -3,6 +3,7 @@ using System.Collections;
 
 using System.Collections.Generic;       //Allows us to use Lists. 
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -16,10 +17,25 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerStatus playerStatus;
     public WeaponStatus weaponStatus;
+    public MouseInputState mouseInputStatus;
+    public GameState gameState;
+    public PlayerLevelManager playerLevelManager;
 
     public float vertExtent;
 
     public float horzExtent;
+
+    private Canvas mainCanvas;
+
+    private TextMeshProUGUI waveText;
+    private TextMeshProUGUI coinText;
+    private TextMeshProUGUI levelText;
+    private Text hintText;
+    private GameObject playerMenu;
+    private GameObject shootModeImageObj;
+    private Image shootModeImage;
+    private GameObject swordModeImageObj;
+    private Image swordModeImage;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -65,12 +81,75 @@ public class GameManager : MonoBehaviour
         weaponStatus.chargeSwordDamage = 100f;
         weaponStatus.chargeSwordSpeed = 3f;
 
-        IncrementCoinBy(1000);
+        mouseInputStatus = MouseInputState.Attack;
+
+        gameState = GameState.Tutorial;
+        
+        playerLevelManager = new PlayerLevelManager();
+        playerLevelManager.SetVitalityToLevel(1);
+        playerLevelManager.SetSkillToLevel(1);
+        playerLevelManager.SetStrengthToLevel(1);
+
+        coin = 1000;
     }
 
     void Start()
     {
         GameObject player = Instantiate(PrefabManager.instance.player, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+
+        mainCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        waveText = GameObject.Find("WaveText").GetComponent<TextMeshProUGUI>();
+        coinText = GameObject.Find("CoinText").GetComponent<TextMeshProUGUI>();
+        levelText = GameObject.Find("LevelText").GetComponent<TextMeshProUGUI>();
+        hintText = GameObject.Find("HintText").GetComponent<Text>();
+        playerMenu = GameObject.Find("PlayerMenu");
+        shootModeImageObj = GameObject.Find("ShootModeImage");
+        swordModeImageObj = GameObject.Find("SwordModeImage");
+        shootModeImage = shootModeImageObj.GetComponent<Image>();
+        swordModeImage = swordModeImageObj.GetComponent<Image>();
+        
+        UpdateCursorTexture();
+        UpdateAttackTypeUI();
+        
+        // IncrementCoinBy(1000);
+        coinText.text = "Coin: " + coin;
+    }
+
+    void Update()
+    {
+        if (hintText.enabled) {
+            UpdateHintTextPosition();
+        }
+        
+        // for level up testing use
+        if (Input.GetKeyDown("i")) {
+            playerLevelManager.LevelUpVitalityBy(1);
+            Debug.Log("Level up vitality by 1, current vitality: " + playerLevelManager.vitality);
+        }
+        if (Input.GetKeyDown("o")) {
+            playerLevelManager.LevelUpSkillBy(1);
+            Debug.Log("Level up skill by 1, current skill: " + playerLevelManager.skill);
+        }
+        if (Input.GetKeyDown("p")) {
+            playerLevelManager.LevelUpStrengthBy(1);
+            Debug.Log("Level up strength by 1, current strength: " + playerLevelManager.strength);
+        }
+        if (Input.GetKeyDown("[")) {
+            Debug.Log("maxHp: " + playerStatus.maxHp);
+            Debug.Log("maxChargeBarValue: " + playerStatus.maxChargeBarValue);
+            Debug.Log("chargeCoolDownDuration: " + playerStatus.chargeCoolDownDuration);
+            Debug.Log("chargeBarIncreaseRate: " + playerStatus.chargeBarIncreaseRate);
+            Debug.Log("chargeBarDecreaseRate: " + playerStatus.chargeBarDecreaseRate);
+            Debug.Log("shootCoolDownDuration: " + playerStatus.shootCoolDownDuration);
+            Debug.Log("bulletDamage: " + weaponStatus.bulletDamage);
+            Debug.Log("bulletSpeed: " + weaponStatus.bulletSpeed);
+            Debug.Log("swordDamage: " + weaponStatus.swordDamage);
+            Debug.Log("swordRepelForce: " + weaponStatus.swordRepelForce);
+            Debug.Log("chargeBulletDamage: " + weaponStatus.chargeBulletDamage);
+            Debug.Log("chargeBulletSpeed: " + weaponStatus.chargeBulletSpeed);
+            Debug.Log("chargeSwordDamage: " + weaponStatus.chargeSwordDamage);
+            Debug.Log("chargeSwordSpeed: " + weaponStatus.chargeSwordSpeed);
+        }
     }
 
     void EndGame()
@@ -82,14 +161,92 @@ public class GameManager : MonoBehaviour
     {
         wave += delta;
 
-        GameObject.Find("WaveText").GetComponent<TextMeshProUGUI>().text = "Wave: " + wave;
+        waveText.text = "Wave: " + wave;
     }
 
     public void IncrementCoinBy(long delta = 1)
     {
         coin += delta;
 
-        GameObject.Find("CoinText").GetComponent<TextMeshProUGUI>().text = "Coin: " + coin;
+        coinText.text = "Coin: " + coin;
     }
 
+    public void SetPlayerLevelText(int level)
+    {
+        levelText.text = "Level: " + level;
+    }
+
+    // do state checking inside method
+    public void UpdateCursorTexture()
+    {
+        Texture2D cursorType = null;
+        CursorMode cursorMode = CursorMode.Auto;
+        switch (mouseInputStatus) {
+            case MouseInputState.Attack:
+                cursorType = PrefabManager.instance.crosshairCursorType;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
+                break;
+            case MouseInputState.AddTower:
+                cursorType = PrefabManager.instance.addTowerCursorType;
+                cursorMode = CursorMode.ForceSoftware;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
+                break;
+            case MouseInputState.UpgradeTower:
+                cursorType = PrefabManager.instance.upgradeTowerCursorType;
+                cursorMode = CursorMode.ForceSoftware;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/2, cursorType.height/2), cursorMode);
+                break;
+            case MouseInputState.InteractUI:
+            default:
+                cursorType = PrefabManager.instance.pickerCursorType;
+                Cursor.SetCursor(cursorType, new Vector2(cursorType.width/3, 0), cursorMode);
+                break;
+        }
+    }
+
+    public void UpdateAttackTypeUI() {
+        switch (playerStatus.currentAttackType) {
+            case PlayerAttackType.Shoot: {
+                shootModeImageObj.transform.localScale = new Vector2(1, 1);
+                swordModeImageObj.transform.localScale = new Vector2(0.7f, 0.7f);
+                Color tmp = shootModeImage.color;
+                tmp.a = 1f;
+                shootModeImage.color = tmp;
+                tmp = swordModeImage.color;
+                tmp.a = 0.7f;
+                swordModeImage.color = tmp;
+                break;
+            }
+            case PlayerAttackType.Slice: {
+                swordModeImageObj.transform.localScale = new Vector2(1, 1);
+                shootModeImageObj.transform.localScale = new Vector2(0.7f, 0.7f);
+                Color tmp = shootModeImage.color;
+                tmp.a = 0.7f;
+                shootModeImage.color = tmp;
+                tmp = swordModeImage.color;
+                tmp.a = 1f;
+                swordModeImage.color = tmp;
+                break;
+            }
+        }
+    }
+
+    public void ShowHintText(string text)
+    {
+        hintText.enabled = true;
+        hintText.text = text;
+    }
+
+    public void HideHintText()
+    {
+        hintText.enabled = false;
+    }
+
+    private void UpdateHintTextPosition()
+    {
+        Vector2 newPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y + 40);
+        Vector2 pos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(mainCanvas.transform as RectTransform, newPos, mainCanvas.worldCamera, out pos);
+        hintText.transform.position = mainCanvas.transform.TransformPoint(pos);
+    }
 }

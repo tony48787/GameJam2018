@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TowerController : MonoBehaviour {
 
@@ -11,40 +12,110 @@ public class TowerController : MonoBehaviour {
 
     private GameObject enemy;
 
+    private TowerType towerType;
+
+    private TextMeshProUGUI towerLevelText;
+
+    private Transform bulletTransform;
+
+    public TowerOwner owner;
+
     public int level = 1;
 
     public float damage = 50.0f;
 
-    public void UpgradeTower()
+    public void UpgradeTowerByCoin()
     {
-        long upgradeCost = GetComponentInParent<TowerType>().powerRuleForUpgradeCost.retrieveValueForLevel(level);
+        long upgradeCost = towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
         if (GameManager.instance.coin >= upgradeCost)
         {
-            level += 1;
-            damage = GetComponentInParent<TowerType>().powerRuleForDamage.retrieveValueForLevel(level);
+            if (owner == TowerOwner.HERO)
+            {
+                UpgradeTower();
 
-            GameManager.instance.IncrementCoinBy(-upgradeCost);
+                GameManager.instance.IncrementCoinBy(-upgradeCost);
+            } else
+            {
+                Debug.Log("This is not your tower anymore.");
+            }
+            
         }
-        
+
+    }
+
+    public void UpgradeTower()
+    {
+        level += 1;
+        damage = towerType.powerRuleForDamage.retrieveValueForLevel(level);
+        towerLevelText.text = level.ToString();
+    }
+
+    public long GetUpgradeCost()
+    {
+        return towerType.powerRuleForUpgradeCost.retrieveValueForLevel(level);
+    }
+
+    public void UpdateOwnerToEnemy()
+    {
+        owner = TowerOwner.ENEMY;
+        enemy = GameObject.FindGameObjectWithTag("Player");
+        GetComponent<SpriteRenderer>().color = new Color(248f / 255f, 109f / 255f, 255f / 255f);
     }
 
     // Use this for initialization
     void Start () {
-		
-	}
+		towerType = GetComponent<TowerType>();
+        towerLevelText = transform.parent.GetComponentInChildren<TextMeshProUGUI>();
+        bulletTransform = GetComponentInChildren<Transform>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        enemy = GameObject.FindGameObjectWithTag("Enemy");
-        if (EnemyInRange() && !overheat) {
-            ShootEnemy();
-        } else
-        {
-            Cooldown();
-        }
+            if (!overheat)
+            {
 
-        
+                if (owner == TowerOwner.ENEMY && GameManager.instance.gameState == GameState.Playing)
+                {
+                    ShootEnemy();
+                }
+                else if (owner == TowerOwner.HERO)
+                {
+                    if (EnemyInRange())
+                    {
+                        ShootEnemy();
+                    }
+                    else
+                    {
+                        enemy = FindClosestEnemy();
+                    }
+                }
+            }
+            else
+            {
+                Cooldown();
+            }
+
 	}
+
+    GameObject FindClosestEnemy()
+    {
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject go in gos)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        return closest;
+    }
 
     bool EnemyInRange()
     {
@@ -64,16 +135,19 @@ public class TowerController : MonoBehaviour {
         overheat = true;
         lastShootTime = Time.time;
 
-        Transform transform = GetComponent<Transform>();
         Vector3 diff = enemy.transform.position - transform.position;
         diff.Normalize();
 
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        GetComponent<Transform>().rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
 
-        Transform bulletTransform = GetComponentInChildren<Transform>();
         GameObject gm = Instantiate(PrefabManager.instance.towerBullet01, bulletTransform.position, bulletTransform.rotation);
         gm.GetComponentInChildren<BulletController>().damage = damage;
+
+        if(owner == TowerOwner.ENEMY)
+        {
+            gm.GetComponentInChildren<BulletController>().owner = BulletOwner.ENEMY;
+        }
     }
 
     void Cooldown()
@@ -83,4 +157,10 @@ public class TowerController : MonoBehaviour {
             overheat = false;
         }
     }
+}
+
+public enum TowerOwner
+{
+    ENEMY,
+    HERO
 }

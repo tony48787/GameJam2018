@@ -10,11 +10,25 @@ public class LevelManager : MonoBehaviour {
     private string[] tileMaps;
 
     private GameObject startWaveBtn;
+    private GameObject levelUpBtn;
+    private GameObject levelUpMenu;
 
     // Use this for initialization
     void Start ()
     {
+        startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
+        levelUpBtn = GameObject.Find("LevelUpBtn").gameObject;
+        levelUpMenu = GameObject.Find("PlayerMenu").gameObject;
+        levelUpMenu.SetActive(false);
         CreateLevel();
+        CreateHelpIcon();
+        SetBtnIsActive(false);
+    }
+
+    private void CreateHelpIcon()
+    {
+        Vector3 newPosition = new Vector3(-GameManager.instance.horzExtent / 4, 0, 0);
+        Instantiate(PrefabManager.instance.helpIcon, newPosition, Quaternion.identity).GetComponent<HelpIcon>().current = 0;
     }
 
     private void CreateLevel()
@@ -62,23 +76,27 @@ public class LevelManager : MonoBehaviour {
     {
         gameObject.SendMessage("StartSpawn");
 
-        startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
-        startWaveBtn.SetActive(false);
+        SetBtnIsActive(false);
+
+        GameManager.instance.gameState = GameState.Playing;
+
     }
 
     public void EndWave()
     {
-        startWaveBtn.SetActive(true);
+        SetBtnIsActive(true);
 
         GameManager.instance.IncrementWaveBy();
+        GameManager.instance.gameState = GameState.Transiting;
     }
 
     public void DevpKillEnemy()
     {
-        GameObject go = GameObject.FindGameObjectWithTag("Enemy");
-        if (go)
-        {
-            go.GetComponent<EnemyController>().OnDespawn();
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies) {
+            if (enemy) {
+                enemy.GetComponent<EnemyController>().OnDespawn();
+            }
         }
     }
 
@@ -108,5 +126,23 @@ public class LevelManager : MonoBehaviour {
             tileMaps[row] = rowStr;
         }
         return tileMaps;
+    }
+
+    public void OpenLevelUpMenu()
+    {
+        levelUpBtn.SetActive(false);
+        levelUpMenu.SetActive(true);
+    }
+
+    public void CloseLevelUpMenu()
+    {
+        levelUpMenu.SetActive(false);
+        levelUpBtn.SetActive(true);
+    }
+
+    public void SetBtnIsActive(bool isActive)
+    {
+        startWaveBtn.SetActive(isActive);
+        levelUpBtn.SetActive(isActive);
     }
 }
