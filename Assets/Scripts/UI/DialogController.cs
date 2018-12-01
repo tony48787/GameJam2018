@@ -8,13 +8,14 @@ public class DialogController : MonoBehaviour {
 
     public static string[] dialogs = new string[]
     {
+        "Move Up: W, Move Left: A, Move Down: S, Move Right: D..." ,
+        "Attack: left-click, Charged Attack: right-click, Switch Weapon: E..." ,
+        "Place / Upgrade Tower: left-click the tile / tower...",
         "This is a game about a nameless hero fighting enemies alone...",
         "Everytime you press 'Start Wave', enemies will rush and try to kill you..." ,
-        "But do not worry, you can buy tower and place it" ,
-        "Be wise to spend your coins to upgrade the hero or towers..." ,
-        "Enemy will try to convert your tower. Stop them!" ,
+        "Enemy will also try to convert your tower and shoot you. Stop them!" ,
         "Once the tower are converted, you have no way to get it back...",
-        "Have fun!"
+        "Hope you enjoy it!"
     };
 
     private Vector3[] spawnLocations;
