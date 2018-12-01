@@ -104,7 +104,7 @@ public class EnemySpawner : MonoBehaviour {
         return newEnemy;
     }
 
-    void EndSpawn()
+    public void EndSpawn()
     {
         gameObject.SendMessage("EndWave");
 
