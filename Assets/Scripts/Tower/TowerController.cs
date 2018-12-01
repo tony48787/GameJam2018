@@ -18,8 +18,6 @@ public class TowerController : MonoBehaviour {
 
     private Transform bulletTransform;
 
-    public bool isActive = true;
-
     public TowerOwner owner;
 
     public int level = 1;
@@ -69,17 +67,14 @@ public class TowerController : MonoBehaviour {
 		towerType = GetComponent<TowerType>();
         towerLevelText = transform.parent.GetComponentInChildren<TextMeshProUGUI>();
         bulletTransform = GetComponentInChildren<Transform>();
-        isActive = true;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if(isActive)
-        {
             if (!overheat)
             {
 
-                if (owner == TowerOwner.ENEMY)
+                if (owner == TowerOwner.ENEMY && GameManager.instance.gameState == GameState.Playing)
                 {
                     ShootEnemy();
                 }
@@ -99,7 +94,6 @@ public class TowerController : MonoBehaviour {
             {
                 Cooldown();
             }
-        }
 
 	}
 
