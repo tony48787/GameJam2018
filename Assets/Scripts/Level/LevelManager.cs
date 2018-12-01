@@ -27,11 +27,7 @@ public class LevelManager : MonoBehaviour {
 
     private void CreateHelpIcon()
     {
-        Vector3 newPosition = new Vector3(
-                            UnityEngine.Random.Range(-GameManager.instance.horzExtent / 2, GameManager.instance.horzExtent / 2),
-                            UnityEngine.Random.Range(-GameManager.instance.vertExtent / 2, GameManager.instance.vertExtent / 2),
-                            0);
-
+        Vector3 newPosition = new Vector3(-GameManager.instance.horzExtent / 4, 0, 0);
         Instantiate(PrefabManager.instance.helpIcon, newPosition, Quaternion.identity).GetComponent<HelpIcon>().current = 0;
     }
 

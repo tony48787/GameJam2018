@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
         mouseInputStatus = MouseInputState.Attack;
 
-        gameState = GameState.Transiting;
+        gameState = GameState.Tutorial;
         
         playerLevelManager = new PlayerLevelManager();
         playerLevelManager.SetVitalityToLevel(1);
