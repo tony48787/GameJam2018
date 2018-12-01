@@ -17,7 +17,9 @@ public class SwordWindController : MonoBehaviour {
 
 		rb2d = GetComponent<Rigidbody2D>();
 		rb2d.velocity = rb2d.transform.up * gm.weaponStatus.chargeSwordSpeed;
-	}
+        GetComponent<AudioSource>().Play();
+
+    }
 
 	// Update is called once per frame
 	void Update () {
