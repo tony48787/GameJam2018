@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour {
 
     private GameObject startWaveBtn;
     private GameObject levelUpBtn;
+    private GameObject restartBtn;
     private GameObject levelUpMenu;
 
     // Use this for initialization
@@ -18,8 +19,11 @@ public class LevelManager : MonoBehaviour {
     {
         startWaveBtn = GameObject.Find("StartWaveBtn").gameObject;
         levelUpBtn = GameObject.Find("LevelUpBtn").gameObject;
+        restartBtn = GameObject.Find("RestartBtn").gameObject;
         levelUpMenu = GameObject.Find("PlayerMenu").gameObject;
         levelUpMenu.SetActive(false);
+        restartBtn.GetComponent<Button>().onClick.AddListener(() => OnRestartBtnClicked());
+        restartBtn.SetActive(false);
         CreateLevel();
         CreateHelpIcon();
         SetBtnIsActive(false);
@@ -92,12 +96,24 @@ public class LevelManager : MonoBehaviour {
 
     public void DevpKillEnemy()
     {
+        GetComponent<EnemySpawner>().EndSpawn();
+        Destroy(GetComponent<EnemySpawner>());
+
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies) {
             if (enemy) {
-                enemy.GetComponent<EnemyController>().OnDespawn();
+                Destroy(enemy);
             }
         }
+
+        GameObject[] healthBars = GameObject.FindGameObjectsWithTag("HealthBar");
+        foreach (GameObject healthBar in healthBars) {
+            if (healthBar) {
+                Destroy(healthBar);
+            }
+        }
+
+        gameObject.AddComponent<EnemySpawner>();
     }
 
     private string[] ReadTextFiles()
@@ -144,5 +160,17 @@ public class LevelManager : MonoBehaviour {
     {
         startWaveBtn.SetActive(isActive);
         levelUpBtn.SetActive(isActive);
+    }
+
+    public void EnableRestartBtn()
+    {
+        restartBtn.SetActive(true);
+    }
+
+    public void OnRestartBtnClicked()
+    {
+        restartBtn.SetActive(false);
+        SetBtnIsActive(true);
+        GameManager.instance.RestartGame();
     }
 }

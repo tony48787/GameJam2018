@@ -91,6 +91,11 @@ public class GameManager : MonoBehaviour
         playerLevelManager.SetStrengthToLevel(1);
 
         coin = 1000;
+        wave = 1;
+        
+        SetCoinText(coin);
+        SetWaveText(wave);
+        SetPlayerLevelText(playerLevelManager.playerLevel);
     }
 
     void Start()
@@ -112,7 +117,7 @@ public class GameManager : MonoBehaviour
         UpdateAttackTypeUI();
         
         // IncrementCoinBy(1000);
-        coinText.text = "Coin: " + coin;
+        SetCoinText(coin);
     }
 
     void Update()
@@ -157,6 +162,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("menu");
     }
 
+    public void RestartGame()
+    {
+        InitGame();
+        Debug.Log("Restrat game");
+    }
+
     public void IncrementWaveBy(int delta = 1)
     {
         wave += delta;
@@ -171,9 +182,19 @@ public class GameManager : MonoBehaviour
         coinText.text = "Coin: " + coin;
     }
 
-    public void SetPlayerLevelText(int level)
+    public void SetWaveText(long wave)
     {
-        levelText.text = "Level: " + level;
+        if (waveText) waveText.text = "Wave: " + wave;
+    }
+
+    public void SetCoinText(long coin)
+    {
+        if (coinText) coinText.text = "Coin: " + coin;
+    }
+
+    public void SetPlayerLevelText(long level)
+    {
+        if (levelText) levelText.text = "Level: " + level;
     }
 
     // do state checking inside method
