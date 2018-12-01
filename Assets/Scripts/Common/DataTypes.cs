@@ -65,5 +65,5 @@ public enum MouseInputState {
 }
 
 public enum GameState {
-	Playing, Pausing, Transiting
+	Playing, Pausing, Transiting, Tutorial
 }

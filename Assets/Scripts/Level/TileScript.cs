@@ -135,7 +135,7 @@ public class TileScript : MonoBehaviour {
             gm.ShowHintText("Coin needed: " + towerController.GetUpgradeCost());
         }
         gm.UpdateCursorTexture();
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) && gm.gameState != GameState.Tutorial) {
             if(!isOccupied)
             {
                 tower = towerSpawner.SpawnTower(transform);
