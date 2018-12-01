@@ -127,18 +127,7 @@ public class GameManager : MonoBehaviour
         }
         
         // for level up testing use
-        if (Input.GetKeyDown("i")) {
-            playerLevelManager.LevelUpVitalityBy(1);
-            Debug.Log("Level up vitality by 1, current vitality: " + playerLevelManager.vitality);
-        }
-        if (Input.GetKeyDown("o")) {
-            playerLevelManager.LevelUpSkillBy(1);
-            Debug.Log("Level up skill by 1, current skill: " + playerLevelManager.skill);
-        }
-        if (Input.GetKeyDown("p")) {
-            playerLevelManager.LevelUpStrengthBy(1);
-            Debug.Log("Level up strength by 1, current strength: " + playerLevelManager.strength);
-        }
+        
         if (Input.GetKeyDown("[")) {
             Debug.Log("maxHp: " + playerStatus.maxHp);
             Debug.Log("maxChargeBarValue: " + playerStatus.maxChargeBarValue);
